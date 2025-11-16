@@ -1,0 +1,122 @@
+.register-page {
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+  padding: 20px;
+  height: 1000px;
+  background-image: url('../assets/tax2.jpg'); /* IMPORTANT: Replace with your actual image path */
+    background-size: cover; 
+    background-position: center; 
+    background-attachment:inherit; 
+
+}
+
+.register-card {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 1000px;
+  width: 100%;
+  min-height: 550px;
+  margin-top:0%;
+}
+
+.register-left {
+  flex: 1.1;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.register-left h2 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.register-left p {
+  color: #555;
+  margin-bottom: 25px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.register-form input,
+.register-form select {
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  border-color: #667eea;
+}
+
+.register-form button {
+  background-color: #667eea;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register-form button:hover {
+  background-color: #5a67d8;
+}
+
+.login-text {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.login-text a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-right {
+  flex: 1;
+  background-color: #f9fafb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.register-right img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .register-card {
+    flex-direction: column;
+  }
+
+  .register-right {
+    order: -1;
+    background: none;
+  }
+}

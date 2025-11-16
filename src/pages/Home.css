@@ -1,0 +1,482 @@
+/* --- Basic Layout --- */
+body, html {
+ margin: 0;
+ padding: 0;
+ font-family: "Poppins", sans-serif;
+     background-color: #f9f9f9;
+ color: #222;
+}
+
+/* --- Navbar --- */
+.navbar {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ background-color: #222;
+ color: #fff;
+ padding: 15px 50px;
+ position: sticky;
+ top: 0;
+ z-index: 1000;
+}
+
+.logo {
+ font-weight: 700;
+ font-size: 1.5rem;
+}
+
+.nav-links {
+ display: flex;
+ list-style: none;
+ gap: 25px;
+}
+
+.nav-links li {
+ cursor: pointer;
+ transition: color 0.3s;
+}
+
+.nav-links li:hover {
+ color: #4f9cf9;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 100px 80px;
+ background: linear-gradient(to right, #f0f4ff, #ffffff);
+}
+
+.hero-content {
+ max-width: 50%;
+}
+
+.hero-content h1 {
+ font-size: 3rem;
+ line-height: 1.2;
+ color: #222;
+}
+
+.hero-content span {
+ color: #4f9cf9;
+}
+
+.hero-content p {
+ margin: 20px 0;
+ color: #555;
+ font-size: 1.1rem;
+}
+
+.hero-buttons {
+ display: flex;
+ gap: 15px;
+}
+
+.btn-primary {
+ background-color: #4f9cf9;
+ color: #fff;
+ border: none;
+ padding: 12px 28px;
+ border-radius: 8px;
+ font-weight: bold;
+ cursor: pointer;
+ transition: 0.3s;
+}
+
+.btn-primary:hover {
+ background-color: #357ae8;
+}
+
+.btn-outline {
+ background: transparent;
+ border: 2px solid #4f9cf9;
+ color: #4f9cf9;
+ padding: 12px 28px;
+ border-radius: 8px;
+ font-weight: bold;
+ cursor: pointer;
+}
+
+.btn-outline:hover {
+ background-color: #4f9cf9;
+ color: white;
+}
+
+.hero-image img {
+ width: 450px;
+ height: auto;
+}
+
+/* --- NEW: Service Selection Section Styles --- */
+/* ============================= */
+/* Service Selection Section */
+/* ============================= */
+
+.service-selection-section {
+  width: 100%;
+  padding: 100px 0;
+  background-color: #ffffff;
+}
+
+.service-selection-section .container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.service-selection-section .text-center {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.service-selection-section h2 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #1f2937; /* dark gray */
+}
+
+.service-selection-section p {
+  font-size: 1.1rem;
+  color: #6b7280; /* light gray */
+  margin-top: 10px;
+}
+
+/* Grid layout for cards */
+.service-selection-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Individual Card Styling */
+.service-selection-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.service-selection-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(79, 156, 249, 0.2);
+}
+
+/* Icon Circle */
+.icon-wrapper {
+  padding: 15px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-wrapper.primary {
+  background-color: rgba(79, 156, 249, 0.1);
+}
+
+.icon-wrapper.secondary {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.icon-wrapper .material-symbols-outlined {
+  font-size: 40px;
+}
+
+.icon-wrapper.primary .material-symbols-outlined {
+  color: #4f9cf9;
+}
+
+.icon-wrapper.secondary .material-symbols-outlined {
+  color: #4CAF50;
+}
+
+/* Buttons */
+.primary-btn,
+.secondary-btn {
+  margin-top: 15px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.primary-btn {
+  background-color: #4f9cf9;
+}
+
+.primary-btn:hover {
+  background-color: #357ae8;
+}
+
+.secondary-btn {
+  background-color: #4CAF50;
+}
+
+.secondary-btn:hover {
+  background-color: #3d8b40;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .service-selection-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-transition-heading{
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+.section-transition-subheading{
+    text-align: center;
+    font-size: 1.1rem;
+    color: #6b7280; /* light gray */
+    margin-top: 10px;
+}
+
+/* --- Service Blocks --- */
+.service-blocks-section {
+ padding: 50px 100px;
+ background-color: #fff;
+}
+
+.service-block {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 50px;
+ margin-bottom: 80px;
+}
+
+.service-block.reverse {
+ flex-direction: row-reverse;
+}
+
+.text-content {
+ flex: 1;
+}
+
+.text-content h3 {
+ font-size: 1.8rem;
+ color: #222;
+ margin-bottom: 10px;
+}
+
+.text-content p {
+ color: #555;
+ font-size: 1.05rem;
+ line-height: 1.6;
+ margin-bottom: 15px;
+}
+
+.block-cta-btn {
+text-decoration: none;
+ background-color: #4f9cf9;
+ color: white;
+ padding: 10px 20px;
+ border-radius: 6px;
+ font-weight: 600;
+ transition: 0.3s;
+}
+
+.block-cta-btn:hover {
+    background-color: #357ae8;
+}
+
+.image-content img {
+    width: 420px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Trust Section --- */
+.trust-section {
+    background-color: #f8fafc;
+    text-align: center;
+    padding: 70px 40px;
+}
+
+.trust-section h3 {
+    font-size: 2rem;
+    margin-bottom: 40px;
+    color: #222;
+}
+
+.feature-cards {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 250px;
+    text-align: center;
+}
+
+.card .icon {
+    font-size: 2rem;
+}
+
+.learn-more-btn {
+    display: inline-block;
+    margin-top: 30px;
+    text-decoration: none;
+    color: white;
+    background-color: #4f9cf9;
+    padding: 12px 28px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.learn-more-btn:hover {
+    background-color: #357ae8;
+}
+
+/* --- Footer --- */
+.site-footer {
+    background-color: #003366; /* Deep Navy Blue */
+    color: white;
+    padding-top: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-top: 5px solid #4CAF50; /* Green highlight bar */
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px 20px;
+    flex-wrap: wrap; /* Ensure responsiveness */
+}
+
+.footer-column {
+    width: 22%; /* Distribute columns evenly */
+    margin-bottom: 20px;
+}
+
+.footer-column h4 {
+    font-size: 1.2em;
+    color: #f7e1b4; /* Light gold/yellow color */
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 5px;
+}
+
+.footer-logo {
+    font-size: 2em;
+    font-weight: bold;
+    color: #4CAF50; /* Green logo highlight */
+}
+
+.mission-statement, .copyright {
+    font-size: 0.9em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-column ul li {
+    margin-bottom: 10px;
+}
+
+.footer-column a {
+    color: #cccccc;
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: color 0.3s;
+}
+
+.footer-column a:hover {
+    color: #4CAF50;
+    text-decoration: underline;
+}
+
+.contact-column p a {
+    font-weight: bold;
+     color: white;
+}
+
+.tech-stack-info {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    font-size: 0.85em;
+    color: #a0a0a0;
+}
+
+/* --- Bottom Bar --- */
+.footer-bottom-bar {
+ background-color: #002244; /* Slightly darker shade */
+ text-align: center;
+padding: 15px 20px;
+font-size: 0.85em;
+color: #a0a0a0;
+}
+
+/* --- Media Queries --- */
+@media (max-width: 768px) {
+    /* Stacking for Service Selection Cards */
+    .selection-cards {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .service-card {
+        width: 100%;
+        max-width: none;
+    }
+    .section-transition-heading {
+        font-size: 2rem;
+        margin: 30px 0;
+    }
+    /* Stacking for Service Blocks */
+    .service-blocks-section {
+        padding: 60px 20px;
+    }
+    .service-block,
+    .service-block.reverse {
+        flex-direction: column; 
+        text-align: center;
+    }
+    .text-content {
+        margin-bottom: 20px;
+    }
+    .image-content img {
+        width: 100%;
+        max-width: 400px;
+    }
+    /* Footer Stacking */
+    .footer-container {
+        flex-direction: column;
+        padding: 0 20px 40px 20px;
+    }
+    .footer-column {
+        width: 100%;
+    }
+}
