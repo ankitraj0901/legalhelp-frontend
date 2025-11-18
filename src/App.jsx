@@ -7,6 +7,7 @@ import CADashboard from "./pages/ca/CADashboard";
 import RequireAuth from "./auth/RequireAuth";
 import CAList from "./pages/ca/CAList";
 import LawyerDashboard from "./pages/lawyer/lawyerDashboard";
+import ConsultantDashboard from "./pages/consultant/Consultant";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/dashboard/user" element={<UserDashboard />} />
         <Route path="/caList" element={<CAList />} />
         <Route path="/dashboard/lawyer" element={<LawyerDashboard />} />
+        <Route path="/dashboard/consultant" element={<ConsultantDashboard />} />
         
 
         {/* CA Dashboard (protected) */}
