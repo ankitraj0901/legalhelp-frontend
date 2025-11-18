@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./CADashboard.css";
-
+import Header from "../../components/Header";
 const CADashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -57,6 +57,8 @@ const CADashboard = () => {
   );
 
   return (
+    <>
+    <Header></Header>
     <div className="ca-dashboard">
       <header className="ca-header">
         <h1>CA Dashboard</h1>
@@ -207,6 +209,7 @@ const CADashboard = () => {
         <button className="docs-btn">View Client Documents</button>
       </section>
     </div>
+    </>
   );
 };
 

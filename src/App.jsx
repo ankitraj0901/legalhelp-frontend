@@ -1,14 +1,13 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, BrowserRouter } from "react-router-dom";
+import {Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import UserDashboard from "./pages/UserDashboard";
-import RegistrationPage from "./pages/RegistrationPage";
-import CADashboard from "./pages/CADashboard";
-import ClientProfile from "./pages/ClientProfile";
-import CAList from "./pages/CAList";
+import UserDashboard from "./pages/user/UserDashboard";
+import CADashboard from "./pages/ca/CADashboard";
 import RequireAuth from "./auth/RequireAuth";
+import CAList from "./pages/ca/CAList";
+import LawyerDashboard from "./pages/lawyer/lawyerDashboard";
+
 
 function App() {
   return (
@@ -18,10 +17,14 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/dashboard/user" element={<UserDashboard />} />
+        <Route path="/caList" element={<CAList />} />
+        <Route path="/dashboard/lawyer" element={<LawyerDashboard />} />
+        
 
         {/* CA Dashboard (protected) */}
         <Route 
-          path="/ca/dashboard" 
+          path="/dashboard/ca" 
           element={
             <RequireAuth allowedRoles={["CA"]}>
               <CADashboard />
@@ -31,7 +34,7 @@ function App() {
 
         {/* USER Dashboard (protected) */}
         <Route 
-          path="/user/dashboard" 
+          path="/dashboard/user" 
           element={
             <RequireAuth allowedRoles={["USER"]}>
               <UserDashboard />
@@ -41,7 +44,7 @@ function App() {
 
         {/* Lawyer */}
         <Route 
-          path="/lawyer/dashboard" 
+          path="/dashboard/lawyer" 
           element={
             <RequireAuth allowedRoles={["LAWYER"]}>
 
@@ -54,7 +57,7 @@ function App() {
 
         {/* Consultant */}
         <Route 
-          path="/consultant/dashboard" 
+          path="/dashboard/consultant" 
           element={
             <RequireAuth allowedRoles={["CONSULTANT"]}>
 

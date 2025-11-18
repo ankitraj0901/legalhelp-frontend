@@ -1,3 +1,4 @@
+
 /* --- Basic Layout --- */
 body, html {
  margin: 0;
@@ -110,144 +111,149 @@ body, html {
 }
 
 /* --- NEW: Service Selection Section Styles --- */
-/* ============================= */
-/* Service Selection Section */
-/* ============================= */
-
-.service-selection-section {
+.service-selection {
   width: 100%;
-  padding: 100px 0;
-  background-color: #ffffff;
+  background-color: #f3f4f6; /* light gray like screenshot */
+  padding: 80px 0;
 }
 
-.service-selection-section .container {
+.service-container {
+  text-align: center;
   max-width: 1100px;
-  margin: 0 auto;
+  margin: auto;
   padding: 0 20px;
 }
 
-.service-selection-section .text-center {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.service-selection-section h2 {
-  font-size: 2.2rem;
+.service-title {
+  font-size: 2.4rem;
   font-weight: 700;
-  color: #1f2937; /* dark gray */
+  color: #1f2937;
 }
 
-.service-selection-section p {
+.service-subtitle {
   font-size: 1.1rem;
-  color: #6b7280; /* light gray */
+  color: #6b7280;
   margin-top: 10px;
 }
 
-/* Grid layout for cards */
-.service-selection-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-/* Individual Card Styling */
-.service-selection-card {
+.service-options {
+  margin-top: 50px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 15px;
-  border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  padding: 40px 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-}
-
-.service-selection-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(79, 156, 249, 0.2);
-}
-
-/* Icon Circle */
-.icon-wrapper {
-  padding: 15px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* Card Style */
+.option-card {
+  background: white;
+  border-radius: 18px;
+  padding: 45px 35px;
+  width: 380px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+}
+
+.option-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+}
+
+/* Icon bubble */
+.icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #e5edff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 20px auto;
 }
 
 .icon-wrapper.primary {
-  background-color: rgba(79, 156, 249, 0.1);
+  background: rgba(79, 156, 249, 0.15);
 }
 
 .icon-wrapper.secondary {
-  background-color: rgba(76, 175, 80, 0.1);
+  background: rgba(76, 175, 80, 0.15);
 }
 
 .icon-wrapper .material-symbols-outlined {
-  font-size: 40px;
+  font-size: 36px;
 }
 
-.icon-wrapper.primary .material-symbols-outlined {
-  color: #4f9cf9;
+.primary .material-symbols-outlined {
+  color: #2563eb;
 }
 
-.icon-wrapper.secondary .material-symbols-outlined {
-  color: #4CAF50;
+.secondary .material-symbols-outlined {
+  color: #22a35d;
+}
+
+.option-card h3 {
+  font-size: 1.6rem;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.option-card p {
+  color: #6b7280;
+  font-size: 1.05rem;
+  margin-bottom: 25px;
+  line-height: 1.5;
 }
 
 /* Buttons */
-.primary-btn,
-.secondary-btn {
-  margin-top: 15px;
-  padding: 12px 28px;
-  font-size: 1rem;
-  font-weight: 600;
+.option-btn {
+  padding: 12px 30px;
   border: none;
-  border-radius: 8px;
-  color: white;
+  border-radius: 10px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-size: 1rem;
+  color: #fff;
+  transition: 0.25s;
 }
 
 .primary-btn {
-  background-color: #4f9cf9;
+  background-color: #2563eb;
 }
 
 .primary-btn:hover {
-  background-color: #357ae8;
+  background-color: #1e4fcf;
 }
 
 .secondary-btn {
-  background-color: #4CAF50;
+  background-color: #22a35d;
 }
 
 .secondary-btn:hover {
-  background-color: #3d8b40;
+  background-color: #1c8c50;
 }
 
-/* Responsive design */
+/* Responsive */
 @media (max-width: 768px) {
-  .service-selection-grid {
-    grid-template-columns: 1fr;
+  .service-options {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .option-card {
+    width: 100%;
+    max-width: 380px;
+    margin: auto;
   }
 }
 
+
 .section-transition-heading{
+    padding: 25px;
     text-align: center;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #1f2937;
 }
 .section-transition-subheading{
     text-align: center;
-    font-size: 1.1rem;
-    color: #6b7280; /* light gray */
-    margin-top: 10px;
 }
 
 /* --- Service Blocks --- */

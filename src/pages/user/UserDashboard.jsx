@@ -1,8 +1,18 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import RequireAuth from "../../auth/RequireAuth";
+import Header from "../../components/Header";
+import { useAuth } from "../../auth/AuthContext";
+// import { useSelector } from 'react-redux';
 import "./UserDashboard.css";
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
+  // const {currentUser} = useAuth();
+
+  // const currentUserName = useSelector((state) => state.auth.user.name);
+
   const user = {
     name: "Ankit",
     nextAction: { label: "Review Draft ITR", status: "Pending Action" },
@@ -33,8 +43,9 @@ const UserDashboard = () => {
     alert("Files uploaded successfully!");
   };
 
-
   return (
+    <>
+    <Header></Header>
     <div className="dashboard-container">
       {/* A. Header */}
       <header className="dashboard-header">
@@ -61,8 +72,32 @@ const UserDashboard = () => {
 
       {/* C. Primary CTAs */}
       <section className="cta-section">
-        <button className="cta-btn cta-blue">File My Taxes Now</button>
-        <button className="cta-btn cta-green">
+        {/* Opening Income tax website iin new tab  */}
+
+        {/* <a
+          className="cta-btn cta-blue"
+          href="https://www.incometax.gov.in/iec/foportal"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          File My Taxes Now
+        </a> */}
+
+        <button
+          className="cta-btn cta-blue"
+          onClick={() => {
+            window.open("https://www.incometax.gov.in/iec/foportal/", "_blank");
+          }}
+        >
+          File My Taxes Now
+        </button>
+
+        <button
+          className="cta-btn cta-green"
+          onClick={() => {
+            navigate("/caList");
+          }}
+        >
           {user.ca.assigned ? "Connect with My CA" : "Find a CA"}
         </button>
       </section>
@@ -73,9 +108,7 @@ const UserDashboard = () => {
         <div className="timeline">
           {["Docs Uploaded", "Verification", "E-Filing"].map((step, index) => (
             <div key={index} className="timeline-step">
-              <div
-                className={`circle ${index < 2 ? "completed" : ""}`}
-              >
+              <div className={`circle ${index < 2 ? "completed" : ""}`}>
                 {index < 2 ? "✓" : index + 1}
               </div>
               <p>{step}</p>
@@ -129,7 +162,9 @@ const UserDashboard = () => {
             onChange={(e) => setFiles(e.target.files)}
             className="file-input"
           />
-          <button type="submit" className="upload-btn">Upload</button>
+          <button type="submit" className="upload-btn">
+            Upload
+          </button>
         </form>
 
         <div className="uploaded-files">
@@ -155,6 +190,7 @@ const UserDashboard = () => {
         </ul>
       </section>
     </div>
+    </>
   );
 };
 

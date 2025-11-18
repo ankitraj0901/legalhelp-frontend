@@ -6,26 +6,23 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 function Login() {
-
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-      const role = localStorage.getItem("role");
+    const role = localStorage.getItem("role");
 
-      if (role === "CA") {
-        navigate("/ca/dashboard");
+    if (role === "CA") {
+        navigate("/dashboard/ca");
       } else if (role === "USER") {
-        navigate("/user/dashboard");
+        navigate("/dashboard/user");
       } else if (role === "LAWYER") {
-        navigate("/lawyer/dashboard");
+        navigate("/dashboard/lawyer");
       } else if (role === "CONSULTANT") {
-        navigate("/consultant/dashboard");
+        navigate("/dashboard/consultant");
       }
-    }, []);
-
-
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,10 +30,10 @@ function Login() {
     try {
       const response = await axios.post("http://localhost:8080/user/login", {
         email,
-        password
+        password,
       });
 
-      const token = response.data.token; 
+      const token = response.data.token;
       const role = response.data.role;
 
       // store JWT + role
@@ -45,21 +42,18 @@ function Login() {
 
       // REDIRECT based on role
       if (role === "CA") {
-        navigate("/ca/dashboard");
+        navigate("/dashboard/ca");
       } else if (role === "USER") {
-        navigate("/user/dashboard");
+        navigate("/dashboard/user");
       } else if (role === "LAWYER") {
-        navigate("/lawyer/dashboard");
+        navigate("/dashboard/lawyer");
       } else if (role === "CONSULTANT") {
-        navigate("/consultant/dashboard");
+        navigate("/dashboard/consultant");
       }
-
     } catch (err) {
       alert("Invalid email or password");
     }
   };
-
-
 
   return (
     <div className="login-page">
@@ -75,7 +69,7 @@ function Login() {
               className="form-control"
               placeholder="Email address"
               required
-              onChange={(e)=>setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -85,7 +79,7 @@ function Login() {
               className="form-control"
               placeholder="Password"
               required
-              onChange={(e)=>setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 

@@ -1,7 +1,10 @@
+import axios from "axios";
 import React, { useState } from "react";
 import "./Register.css";
-import Navbar from '../components/Navbar'
+import Navbar from "../components/Header";
+import { useNavigate } from "react-router-dom";
 const RegisterPage = () => {
+  const navigate = useNavigate();
   const [role, setRole] = useState("User");
   const [formData, setFormData] = useState({
     name: "",
@@ -21,25 +24,110 @@ const RegisterPage = () => {
     setRole(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Registration Data:", { role, ...formData });
-    alert(`${role} registered successfully!`);
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    let registrationData = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      role: role.toUpperCase(),
+    };
+
+    if (role === "CA") {
+      registrationData.caDetailsDTO = {
+        registrationNumber: formData.registrationNo,
+        experience: formData.experience,
+        specialization: formData.firmName,
+      };
+    }
+
+    if (role === "LAWYER") {
+      registrationData.lawyerDetailsDTO = {
+        licenseNumber: formData.registrationNo,
+        experience: formData.experience,
+        court: formData.firmName,
+      };
+    }
+
+    if (role === "CONSULTANT") {
+      registrationData.consultantDetailsDTO = {
+        field: formData.firmName,
+        experience: formData.experience,
+        firmName: formData.firmName,
+      };
+    }
+
+    console.log("Sending JSON:", registrationData);
+
+    
+    const API_ENDPOINT = "http://localhost:8080/user/register";
+
+    try {
+      // Using Axios to send a POST request
+      const response = await axios.post(API_ENDPOINT, registrationData);
+
+      console.log("Server Response:", response.data);
+      alert(`Registration successful! Welcome, ${role}.`);
+      navigate("/login");
+
+      // Optional: Reset form fields after successful submission
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        registrationNo: "",
+        experience: "",
+        firmName: "",
+      });
+    } catch (error) {
+      // Axios puts errors in error.response (if it's an HTTP error)
+      // or error.message (if it's a network error)
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx (e.g., 400, 409 Conflict)
+        console.error("Registration Error:", error.response.data);
+        alert(
+          `❌ Registration Failed: ${
+            error.response.data.message || "Check your details."
+          }`
+        );
+      } else if (error.request) {
+        // The request was made but no response was received (e.g., server down)
+        console.error("Network Error:", error.request);
+        alert("❌ Network Error: Could not reach the server.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error:", error.message);
+        alert("❌ An unexpected error occurred during submission.");
+      }
+    }
   };
 
   return (
     <div className="register-page">
-      <Navbar></Navbar>
+      {/* <Navbar></Navbar> */}
       <div className="register-card">
         <div className="register-left">
           <h2>Create Your Account</h2>
           <p>Register as a User, Chartered Accountant, Lawyer, or Consultant</p>
           <form className="register-form" onSubmit={handleSubmit}>
-            <select name="role" value={role} onChange={handleRoleChange} required>
-              <option value="User">User</option>
+            <select
+              name="role"
+              value={role}
+              onChange={handleRoleChange}
+              required
+            >
+              <option value="USER">User</option>
               <option value="CA">Chartered Accountant</option>
-              <option value="Lawyer">Lawyer</option>
-              <option value="Consultant">Consultant</option>
+              <option value="LAWYER">Lawyer</option>
+              <option value="CONSULTANT">Consultant</option>
             </select>
 
             <input
@@ -76,7 +164,7 @@ const RegisterPage = () => {
             />
 
             {/* Extra fields for professionals */}
-            {(role === "CA" || role === "Lawyer" || role === "Consultant") && (
+            {(role === "CA" || role === "LAWYER" || role === "CONSULTANT") && (
               <>
                 <input
                   type="text"
@@ -103,7 +191,7 @@ const RegisterPage = () => {
                 <input
                   type="text"
                   name="firmName"
-                  placeholder="Firm / Organization Name"
+                  placeholder="Court"
                   value={formData.firmName}
                   onChange={handleChange}
                   required
