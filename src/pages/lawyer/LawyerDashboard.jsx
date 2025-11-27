@@ -12,8 +12,19 @@ import {
   FaCalendar,
   FaMoneyBill,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function LawyerDashboard() {
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
+
+
   // Updated Stats (Pending Client removed)
   const stats = [
     { title: "Total Active Cases", value: "42", icon: <FaFolder /> },
@@ -65,7 +76,7 @@ export default function LawyerDashboard() {
 
             <FaUserCircle className="text-gray-600 text-3xl" />
 
-            <button className="flex items-center gap-2 bg-[#2563EB] text-white px-4 py-2 rounded-lg hover:bg-[#1E40AF] transition">
+            <button className="flex items-center gap-2 bg-[#2563EB] text-white px-4 py-2 rounded-lg hover:bg-[#1E40AF] transition" onClick={logout}>
               <FaSignOutAlt /> Logout
             </button>
           </div>

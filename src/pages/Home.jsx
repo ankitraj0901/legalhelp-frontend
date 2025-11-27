@@ -1,7 +1,7 @@
 
 import React from "react";
 import "./Home.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Helper component for service sections
 const ServiceBlock = ({ title, description, link, ctaText, imagePath, reverse }) => (
@@ -27,12 +27,12 @@ const HomePage = () => {
       <nav className="navbar">
         <div className="logo">LegalHelp</div>
         <ul className="nav-links">
-          <li>Home</li>
-          <li>Services</li>
-          <li>Hire CA</li>
-          <li>AI Tools</li>
-          <li>Dashboard</li>
-          <li>Login</li>
+          <li><Link to = '/'>Home</Link></li>
+          <li><Link to = '/service'>Services</Link></li>
+          <li><Link to ='/caList'>Hire CA</Link></li>
+          <li><Link to = ''>AI Tools</Link></li>
+          <li><Link to = '/dashboard/user'>Dashboard</Link></li>
+          <li><Link to = '/login'>Login</Link></li>
         </ul>
       </nav>
 
@@ -71,21 +71,21 @@ const HomePage = () => {
       {/* Hire a Professional */}
       <div className="option-card">
         <div className="icon-wrapper primary">
-          <span className="material-symbols-outlined">groups</span>
+          <span className="material-symbols-outlined">CA</span>
         </div>
         <h3>Hire a Professional</h3>
         <p>
           Connect with our network of Chartered Accountants for personalized support.
         </p>
         <button className="option-btn primary-btn" onClick={()=>{
-          navigate("caList")
+          navigate("/dashboard/user/caList")
         }}>Find Your Expert</button>
       </div>
 
       {/* Use AI Tools */}
       <div className="option-card">
         <div className="icon-wrapper secondary">
-          <span className="material-symbols-outlined">smart_toy</span>
+          <span className="material-symbols-outlined">AI</span>
         </div>
         <h3>Use AI Tools</h3>
         <p>

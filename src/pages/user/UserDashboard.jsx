@@ -49,7 +49,7 @@ const UserDashboard = () => {
     <div className="dashboard-container">
       {/* A. Header */}
       <header className="dashboard-header">
-        <h1>Welcome back, {user.name}!</h1>
+        <h1>Welcome back !{user.name}</h1>
         <p>Here's what's happening today 👇</p>
       </header>
 
@@ -95,7 +95,7 @@ const UserDashboard = () => {
         <button
           className="cta-btn cta-green"
           onClick={() => {
-            navigate("/caList");
+            navigate("/dashboard/user/caList");
           }}
         >
           {user.ca.assigned ? "Connect with My CA" : "Find a CA"}

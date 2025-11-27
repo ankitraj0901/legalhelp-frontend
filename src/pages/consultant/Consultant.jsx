@@ -1,4 +1,5 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
 import {
   FaHome,
   FaUsers,
@@ -35,6 +36,14 @@ const upcomingMeetings = [
 ];
 
 export default function ConsultantDashboard() {
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
+  }
   return (
     <div className="min-h-screen flex bg-white font-sans text-gray-800">
       {/* Sidebar */}
@@ -78,7 +87,7 @@ export default function ConsultantDashboard() {
               className="rounded-full w-10 h-10 border-2 border-[#2563EB]"
             />
 
-            <button className="bg-[#2563EB] text-white px-5 py-2 rounded-lg hover:bg-[#1E40AF] transition flex items-center gap-2">
+            <button className="bg-[#2563EB] text-white px-5 py-2 rounded-lg hover:bg-[#1E40AF] transition flex items-center gap-2" onClick={logout}>
               <FaSignOutAlt /> Logout
             </button>
           </div>

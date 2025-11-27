@@ -18,10 +18,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard/user" element={<UserDashboard />} />
+        {/* <Route path="/dashboard/user" element={<UserDashboard />} />
         <Route path="/caList" element={<CAList />} />
         <Route path="/dashboard/lawyer" element={<LawyerDashboard />} />
-        <Route path="/dashboard/consultant" element={<ConsultantDashboard />} />
+        <Route path="/dashboard/consultant" element={<ConsultantDashboard />} /> */}
         
 
         {/* CA Dashboard (protected) */}
@@ -43,16 +43,23 @@ function App() {
             </RequireAuth>
           }
         />
+        {/* CA List (protected) */}
+        <Route 
+          path="/dashboard/user/caList" 
+          element={
+            <RequireAuth allowedRoles={["USER"]}>
+              <CAList />
+            </RequireAuth>
+          }
+        />
+          
 
         {/* Lawyer */}
         <Route 
           path="/dashboard/lawyer" 
           element={
             <RequireAuth allowedRoles={["LAWYER"]}>
-
-              {/* create later */}
-
-              <h1>LAWYER Dashboard</h1>
+              <LawyerDashboard/>
             </RequireAuth>
           }
         />
@@ -62,10 +69,7 @@ function App() {
           path="/dashboard/consultant" 
           element={
             <RequireAuth allowedRoles={["CONSULTANT"]}>
-
-              {/* create later */}
-
-              <h1>CONSULTANT Dashboard</h1>
+              <ConsultantDashboard/>
             </RequireAuth>
           }
         />
