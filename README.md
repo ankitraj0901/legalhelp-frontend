@@ -1,16 +1,132 @@
-# React + Vite
+🌐 LegalHelp Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React + Vite frontend for connecting users with CAs, Lawyers, and Consultants.
 
-Currently, two official plugins are available:
+🚀 Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This is the frontend of the LegalHelp platform.
+It provides a modern, fast, and responsive UI for:
 
-## React Compiler
+User login & registration
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Listing Chartered Accountants (CAs)
 
-## Expanding the ESLint configuration
+Assigning CA to a user
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Viewing dashboard and profile
+
+Displaying Lawyer & Consultant details
+
+The frontend communicates with the backend (Spring Boot) via REST APIs.
+
+🛠️ Tech Stack
+
+React
+
+Vite
+
+TypeScript
+
+Tailwind CSS
+
+React Router
+
+Axios
+
+🎨 Features
+
+Modern UI built using Tailwind
+
+JWT authentication integration
+
+API-based CA/Lawyer/Consultant listing
+
+Assignment creation UI
+
+Protected routes
+
+Reusable components
+
+🏃 Getting Started
+1️⃣ Clone the repository
+git clone https://github.com/ankitraj0901/legalhelp-frontend.git
+cd legalhelp-frontend
+
+2️⃣ Install dependencies
+npm install
+
+3️⃣ Run development server
+npm run dev
+
+4️⃣ Build for production
+npm run build
+
+🔗 API Configuration
+
+Update backend URL in:
+
+src/services/api.ts
+
+
+Example:
+
+export const API_BASE_URL = "http://localhost:8080";
+
+📁 ### **Project Structure**
+
+```txt
+src/
+├── components/        # Reusable UI components (Navbar, cards, forms)
+├── pages/             # Pages (Login, Register, Dashboard, CA List, Assignment)
+├── services/          # Axios API calls
+├── hooks/             # Custom React hooks
+├── context/           # Global context (auth, user)
+├── App.tsx            # App entry + routes
+└── main.tsx           # React DOM bootstrap
+```
+📁 ### **Detailed Frontend Structure**
+```txt
+src/
+├── assets/            # Images, icons, logos (optional folder)
+│
+├── components/        # UI Components used across pages
+│   ├── Navbar/
+│   ├── Footer/
+│   ├── InputField/
+│   └── UserCard/
+│
+├── pages/             # Complete pages rendered by React Router
+│   ├── Login.tsx
+│   ├── Register.tsx
+│   ├── Dashboard.tsx
+│   ├── CAList.tsx
+│   └── AssignmentPage.tsx
+│
+├── services/          # All API calls using Axios
+│   ├── api.ts         # Base URL config
+│   ├── authService.ts
+│   ├── caService.ts
+│   └── assignmentService.ts
+│
+├── context/           # Global application state
+│   ├── AuthContext.tsx
+│   └── UserContext.tsx
+│
+├── hooks/             # Custom hooks for reuse
+│   ├── useAuth.ts
+│   └── useFetch.ts
+│
+├── router/ (optional) # Route configuration (if separated)
+│
+├── App.tsx            # Root component, route structure
+└── main.tsx           # React + Vite entry point
+
+```
+⭐ Show Your Support
+
+If you found this project helpful, consider giving it a ⭐ star on GitHub!
+
+📬 Contact
+
+Ankit Raj – Full Stack Developer (Spring Boot + React + ML)
+LinkedIn: add your link here
