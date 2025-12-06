@@ -1,43 +1,82 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import "./CAList.css";
+import axios from "axios";
 
 const CAList = () => {
   const [selectedCA, setSelectedCA] = useState(null);
+  const [caList, setCaList] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
+
+  //Extracting 
+  const userId = localStorage.getItem("userId");
+
+
+  //fetch the CA from backend api 
+  useEffect(() => {
+    const fetchCAs = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/ca/list");
+        setCaList(response.data);
+      }catch(error) {
+        setError("Failed to Load CA list");
+      }finally{
+        setLoading(false);
+      }
+    };
+    fetchCAs();
+
+  },[]);
+
+
+
+
 
   // Sample data (would later be fetched from backend)
-  const caList = [
-    {
-      id: 1,
-      name: "Rohit Mehta",
-      experience: "8 Years",
-      specialization: "Tax Filing & GST",
-      rating: 4.8,
-      clients: 120,
-      image: "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=", // Optional placeholder image
-    },
-    {
-      id: 2,
-      name: "Priya Sharma",
-      experience: "5 Years",
-      specialization: "Audit & Compliance",
-      rating: 4.6,
-      clients: 98,
-      image: "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=",
-    },
-    {
-      id: 3,
-      name: "Arjun Verma",
-      experience: "10 Years",
-      specialization: "Startup Accounting & Financial Planning",
-      rating: 4.9,
-      clients: 140,
-      image: "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=",
-    },
-  ];
+  // const caList = [
+  //   {
+  //     id: 1,
+  //     name: "Rohit Mehta",
+  //     experience: "8 Years",
+  //     specialization: "Tax Filing & GST",
+  //     rating: 4.8,
+  //     clients: 120,
+  //     image: "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=", // Optional placeholder image
+  //   }
+  // ];
 
-  const handleConnect = (ca) => {
-    setSelectedCA(ca);
+  // handle function to establish connection between CA and user
+  const handleConnect = async (ca) => {
+    // setSelectedCA(ca);
+    const userId = localStorage.getItem("userId");
+    try{
+      const response = await axios.post("http://localhost:8080/assignments/assign-ca",
+      {
+        clientId: userId,
+        professionalId: ca.userId
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+      const assignmentId = response.data.assignmentId;
+      navigate("/dashboard/user");
+      alert("Connected to CA!");
+
+
+    }
+    catch(error) {
+      console.error(error);
+      alert("Error Connecting to CA ! Try again.");
+      
+    }
   };
 
   return (
@@ -52,29 +91,45 @@ const CAList = () => {
         </p>
       </div>
 
+      {/* Extracting details of Ca from the Returned List */}
+      {loading && <p className="loading">Loading CA list...</p>}
+      {error && <p className="error">{error}</p>}
+
       <div className="ca-card-container">
-        {caList.map((ca) => (
+        {!loading&&
+          !error &&
+          caList.map((ca) => (
           <div className="ca-card" key={ca.id}>
             <div className="ca-card-header">
-              <img src={ca.image} alt={ca.name} className="ca-avatar" />
+              <img
+                  src={
+                    ca.image ||
+                    "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg"
+                  }
+                  alt={ca.name}
+                  className="ca-avatar"
+                />
               <div className="ca-info-header">
                 <h3>{ca.name}</h3>
                 <span className="ca-rating">
-                  ⭐ {ca.rating.toFixed(1)} / 5
+                  ⭐ {4.5} / 5
                 </span>
               </div>
             </div>
 
             <div className="ca-info">
               <p>
+                <strong>Email:</strong> {ca.email} 
+              </p>
+              <p>
                 <strong>Experience:</strong> {ca.experience}
               </p>
               <p>
                 <strong>Specialization:</strong> {ca.specialization}
               </p>
-              <p>
+              {/* <p>
                 <strong>Clients Served:</strong> {ca.clients}+ 
-              </p>
+              </p> */}
             </div>
 
             <button className="connect-btn" onClick={() => handleConnect(ca)}>

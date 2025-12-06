@@ -100,6 +100,22 @@ const UserDashboard = () => {
         >
           {user.ca.assigned ? "Connect with My CA" : "Find a CA"}
         </button>
+        <button
+          className="cta-btn cta-green"
+          onClick={() => {
+            navigate("/dashboard/user/caList");
+          }}
+        >
+          {user.ca.assigned ? "Connect with My Lawyer" : "Find a CA"}
+        </button>
+        <button
+          className="cta-btn cta-green"
+          onClick={() => {
+            navigate("/dashboard/user/caList");
+          }}
+        >
+          {user.ca.assigned ? "Connect with My Consultant" : "Find a CA"}
+        </button>
       </section>
 
       {/* D. Service Timeline */}
