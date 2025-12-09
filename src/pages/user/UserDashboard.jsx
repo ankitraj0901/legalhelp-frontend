@@ -92,26 +92,31 @@ const UserDashboard = () => {
           File My Taxes Now
         </button>
 
+        {/* Button for CA List */}
         <button
           className="cta-btn cta-green"
           onClick={() => {
-            navigate("/dashboard/user/caList");
+            navigate("/user/dashboard/caList");
           }}
         >
           {user.ca.assigned ? "Connect with My CA" : "Find a CA"}
         </button>
+
+        {/* Button for Lawyer List */}
         <button
           className="cta-btn cta-green"
           onClick={() => {
-            navigate("/dashboard/user/caList");
+            navigate("/user/dashboard/lawyerList");
           }}
         >
+
+        {/* Button for Consultant List */}
           {user.ca.assigned ? "Connect with My Lawyer" : "Find a CA"}
         </button>
         <button
           className="cta-btn cta-green"
           onClick={() => {
-            navigate("/dashboard/user/caList");
+            navigate("/user/dashboard/consultantList");
           }}
         >
           {user.ca.assigned ? "Connect with My Consultant" : "Find a CA"}

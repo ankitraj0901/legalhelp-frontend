@@ -16,7 +16,7 @@ function Login() {
     if (role === "CA") {
         navigate("/dashboard/ca");
       } else if (role === "USER") {
-        navigate("/dashboard/user");
+        navigate("/user/dashboard");
       } else if (role === "LAWYER") {
         navigate("/dashboard/lawyer");
       } else if (role === "CONSULTANT") {
@@ -46,7 +46,7 @@ function Login() {
       if (role === "CA") {
         navigate("/dashboard/ca");
       } else if (role === "USER") {
-        navigate("/dashboard/user");
+        navigate("/user/dashboard");
       } else if (role === "LAWYER") {
         navigate("/dashboard/lawyer");
       } else if (role === "CONSULTANT") {

@@ -24,7 +24,7 @@ export default function Header(){ // Renamed from Navbar to Header
                             <Nav.Link href="/" className="mx-2">Home</Nav.Link>
                             <Nav.Link href="#contact" className="mx-2">Contact</Nav.Link>
                             {/* <Nav.Link href="#dashboard" className="mx-2">Dashboard</Nav.Link> */}
-                            <Nav.Link as={Link} to="/dashboard/user" className="mx-2">Dashboard</Nav.Link>
+                            <Nav.Link as={Link} to="/user/dashboard" className="mx-2">Dashboard</Nav.Link>
                             {/* <Nav.Link href="#logout" className="mx-2">Logout</Nav.Link> */}
                             <Button className="mx-2" onClick={logout}>Logout</Button>
                             <Button variant="outline-light" className="ms-3">Book a Free Consultation</Button>

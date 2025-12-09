@@ -31,7 +31,7 @@ const HomePage = () => {
           <li><Link to = '/service'>Services</Link></li>
           <li><Link to ='/caList'>Hire CA</Link></li>
           <li><Link to = ''>AI Tools</Link></li>
-          <li><Link to = '/dashboard/user'>Dashboard</Link></li>
+          <li><Link to = '/user/dashboard'>Dashboard</Link></li>
           <li><Link to = '/login'>Login</Link></li>
         </ul>
       </nav>

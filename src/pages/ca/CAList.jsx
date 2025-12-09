@@ -21,10 +21,10 @@ const CAList = () => {
   useEffect(() => {
     const fetchCAs = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/ca/list");
+        const response = await axios.get("http://localhost:8080/user/ca-list");
         setCaList(response.data);
       }catch(error) {
-        setError("Failed to Load CA list");
+        setError("Failed to Load CA list",error);
       }finally{
         setLoading(false);
       }
@@ -34,21 +34,6 @@ const CAList = () => {
   },[]);
 
 
-
-
-
-  // Sample data (would later be fetched from backend)
-  // const caList = [
-  //   {
-  //     id: 1,
-  //     name: "Rohit Mehta",
-  //     experience: "8 Years",
-  //     specialization: "Tax Filing & GST",
-  //     rating: 4.8,
-  //     clients: 120,
-  //     image: "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=", // Optional placeholder image
-  //   }
-  // ];
 
   // handle function to establish connection between CA and user
   const handleConnect = async (ca) => {
@@ -67,7 +52,7 @@ const CAList = () => {
       }
     );
       const assignmentId = response.data.assignmentId;
-      navigate("/dashboard/user");
+      navigate("/user/dashboard");
       alert("Connected to CA!");
 
 
@@ -158,3 +143,5 @@ const CAList = () => {
 };
 
 export default CAList;
+
+

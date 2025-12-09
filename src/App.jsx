@@ -8,16 +8,22 @@ import RequireAuth from "./auth/RequireAuth";
 import CAList from "./pages/ca/CAList";
 import LawyerDashboard from "./pages/lawyer/lawyerDashboard";
 import ConsultantDashboard from "./pages/consultant/Consultant";
+import LawyerList from "./pages/lawyer/lawyerList";
+import ConsultantList from "./pages/consultant/consultantList";
+import { ToastContainer } from "react-toastify";
 
 
 function App() {
   return (
+    <>
+    <ToastContainer />
     <Routes>
 
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="dashboard/lawyerList" element={<LawyerList />} />
         {/* <Route path="/dashboard/user" element={<UserDashboard />} />
         <Route path="/caList" element={<CAList />} />
         <Route path="/dashboard/lawyer" element={<LawyerDashboard />} />
@@ -36,7 +42,7 @@ function App() {
 
         {/* USER Dashboard (protected) */}
         <Route 
-          path="/dashboard/user" 
+          path="/user/dashboard" 
           element={
             <RequireAuth allowedRoles={["USER"]}>
               <UserDashboard />
@@ -45,7 +51,7 @@ function App() {
         />
         {/* CA List (protected) */}
         <Route 
-          path="/dashboard/user/caList" 
+          path="/user/dashboard/caList" 
           element={
             <RequireAuth allowedRoles={["USER"]}>
               <CAList />
@@ -56,7 +62,7 @@ function App() {
 
         {/* Lawyer */}
         <Route 
-          path="/dashboard/lawyer" 
+          path="/lawyer/dashboard" 
           element={
             <RequireAuth allowedRoles={["LAWYER"]}>
               <LawyerDashboard/>
@@ -64,9 +70,19 @@ function App() {
           }
         />
 
+        {/* LawyerList (protected) */}
+        <Route 
+          path="/user/dashboard/lawyerList" 
+          element={
+            <RequireAuth allowedRoles={["USER"]}>
+              <LawyerList/>
+            </RequireAuth>
+          }
+        />
+
         {/* Consultant */}
         <Route 
-          path="/dashboard/consultant" 
+          path="/consultant/dashboard" 
           element={
             <RequireAuth allowedRoles={["CONSULTANT"]}>
               <ConsultantDashboard/>
@@ -74,7 +90,18 @@ function App() {
           }
         />
 
+        {/* ConsultantList (protected) */}
+        <Route 
+          path="/user/dashboard/consultantList" 
+          element={
+            <RequireAuth allowedRoles={["USER"]}>
+              <ConsultantList/>
+            </RequireAuth>
+          }
+        />
+
       </Routes>
+      </>
   );
 }
 
