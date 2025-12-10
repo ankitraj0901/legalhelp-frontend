@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import "./CAList.css";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CAList = () => {
   const [selectedCA, setSelectedCA] = useState(null);
@@ -12,63 +14,73 @@ const CAList = () => {
 
   const navigate = useNavigate();
 
-
-  //Extracting 
+  //Extracting
   const userId = localStorage.getItem("userId");
 
-
-  //fetch the CA from backend api 
+  //fetch the CA from backend api
   useEffect(() => {
     const fetchCAs = async () => {
+      const clientId = Number(String(userId).trim());
       try {
-        const response = await axios.get("http://localhost:8080/user/ca-list");
-        setCaList(response.data);
-      }catch(error) {
-        setError("Failed to Load CA list",error);
-      }finally{
+        const response = await fetch(
+          `http://localhost:8080/user/ca-list/${clientId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await response.json();
+        console.log(data);
+        setCaList(data);
+      } catch (error) {
+        setError("Failed to Load CA list", error);
+      } finally {
         setLoading(false);
       }
     };
     fetchCAs();
-
-  },[]);
-
-
+  }, []);
 
   // handle function to establish connection between CA and user
   const handleConnect = async (ca) => {
     // setSelectedCA(ca);
-    const userId = localStorage.getItem("userId");
-    try{
-      const response = await axios.post("http://localhost:8080/assignments/assign-ca",
-      {
-        clientId: userId,
-        professionalId: ca.userId
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/assignments/assign-ca",
+        {
+          clientId: userId,
+          professionalId: ca.userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
+      );
+
+      const data = response.data;
+
+      if (data.existing) {
+        toast.warning("You are already connected with this Lawyer.");
+      } else {
+        toast.success("Lawyer connected successfully!");
       }
-    );
-      const assignmentId = response.data.assignmentId;
       navigate("/user/dashboard");
-      alert("Connected to CA!");
-
-
-    }
-    catch(error) {
+    } catch (error) {
       console.error(error);
       alert("Error Connecting to CA ! Try again.");
-      
     }
   };
 
   return (
-    <section className="ca-list-section">
+    <>
       <Header></Header>
+    <section className="ca-list-section">
       <div className="ca-list-header">
-        
         <h2>Find Your Chartered Accountant</h2>
         <p>
           Connect with verified professionals for tax advice, audits, and
@@ -81,47 +93,59 @@ const CAList = () => {
       {error && <p className="error">{error}</p>}
 
       <div className="ca-card-container">
-        {!loading&&
+        {!loading &&
           !error &&
+          caList &&
           caList.map((ca) => (
-          <div className="ca-card" key={ca.id}>
-            <div className="ca-card-header">
-              <img
+            <div className="ca-card" key={ca.id}>
+              <div className="ca-card-header">
+                <img
                   src={
                     ca.image ||
-                    "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg"
+                    "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
                   }
                   alt={ca.name}
                   className="ca-avatar"
                 />
-              <div className="ca-info-header">
-                <h3>{ca.name}</h3>
-                <span className="ca-rating">
-                  ⭐ {4.5} / 5
-                </span>
+                <div className="ca-info-header">
+                  <h3>{ca.name}</h3>
+                  <span className="ca-rating">⭐ {4.5} / 5</span>
+                </div>
               </div>
-            </div>
 
-            <div className="ca-info">
-              <p>
-                <strong>Email:</strong> {ca.email} 
-              </p>
-              <p>
-                <strong>Experience:</strong> {ca.experience}
-              </p>
-              <p>
-                <strong>Specialization:</strong> {ca.specialization}
-              </p>
-              {/* <p>
+              <div className="ca-info">
+                <p>
+                  <strong>Email:</strong> {ca.email}
+                </p>
+                <p>
+                  <strong>Experience:</strong> {ca.experience}
+                </p>
+                <p>
+                  <strong>Specialization:</strong> {ca.specialization}
+                </p>
+                {/* <p>
                 <strong>Clients Served:</strong> {ca.clients}+ 
               </p> */}
-            </div>
+              </div>
 
-            <button className="connect-btn" onClick={() => handleConnect(ca)}>
-              Connect Now
-            </button>
-          </div>
-        ))}
+              {/* <button className="connect-btn" onClick={() => handleConnect(ca)}>
+                Connect Now
+              </button> */}
+
+              {ca.assigned ? (
+                <button className="connected-btn" disabled>
+                  Connected
+                </button>
+              ) : (
+                <button
+                  className="connect-btn"
+                  onClick={() => handleConnect(ca)}
+                >
+                  Connect
+                </button>
+              )}
+            </div>
+          ))}
       </div>
 
       {selectedCA && (
@@ -139,9 +163,8 @@ const CAList = () => {
         </div>
       )}
     </section>
+    </>
   );
 };
 
 export default CAList;
-
-

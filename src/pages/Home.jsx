@@ -1,11 +1,17 @@
-
 import React from "react";
 import "./Home.css";
 import { Link, useNavigate } from "react-router-dom";
 
 // Helper component for service sections
-const ServiceBlock = ({ title, description, link, ctaText, imagePath, reverse }) => (
- <div className={`service-block ${reverse ? "reverse" : ""}`}>
+const ServiceBlock = ({
+  title,
+  description,
+  link,
+  ctaText,
+  imagePath,
+  reverse,
+}) => (
+  <div className={`service-block ${reverse ? "reverse" : ""}`}>
     <div className="text-content">
       <h3>{title}</h3>
       <p>{description}</p>
@@ -26,16 +32,49 @@ const HomePage = () => {
       {/* --- Navbar --- */}
       <nav className="navbar">
         <div className="logo">LegalHelp</div>
+
         <ul className="nav-links">
-          <li><Link to = '/'>Home</Link></li>
-          <li><Link to = '/service'>Services</Link></li>
-          <li><Link to ='/caList'>Hire CA</Link></li>
-          <li><Link to = ''>AI Tools</Link></li>
-          <li><Link to = '/user/dashboard'>Dashboard</Link></li>
-          <li><Link to = '/login'>Login</Link></li>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/service">Services</Link>
+          </li>
+          <li>
+            <Link to="/caList">Hire CA</Link>
+          </li>
+          <li>
+            <Link to="">AI Tools</Link>
+          </li>
+          <li>
+            <Link to="/user/dashboard">Dashboard</Link>
+          </li>
+
+          {/* 👇 Show LOGIN only if NOT logged in */}
+          {!localStorage.getItem("token") && (
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+          )}
+
+          {/* 👇 Show LOGOUT only if logged in */}
+          {localStorage.getItem("token") && (
+            <li>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  localStorage.removeItem("role");
+                  localStorage.removeItem("userId");
+                  window.location.href = "/login"; // redirect
+                }}
+                className="logout-btn"
+              >
+                Logout
+              </button>
+            </li>
+          )}
         </ul>
       </nav>
-
       {/* --- Hero Section --- */}
       <section className="hero-section">
         <div className="hero-content">
@@ -47,10 +86,17 @@ const HomePage = () => {
             predict taxes, optimize savings, and file returns seamlessly.
           </p>
           <div className="hero-buttons">
-            <button className="btn-primary" onClick={()=>{
-              navigate("login");
-            }}>Get Started</button>
-            <a href="#core_feature" className="btn-outline">Learn More</a>
+            <button
+              className="btn-primary"
+              onClick={() => {
+                navigate("login");
+              }}
+            >
+              Get Started
+            </button>
+            <a href="#core_feature" className="btn-outline">
+              Learn More
+            </a>
           </div>
         </div>
         <div className="hero-image">
@@ -58,51 +104,61 @@ const HomePage = () => {
         </div>
       </section>
 
-     
-{/* --- Service Selection Section  --- */}
-<section className="service-selection">
-  <div className="service-container">
-    <h2 className="service-title">Choose the Service That’s Right for You</h2>
-    <p className="service-subtitle">
-      Whether you need expert guidance or advanced tools, we’ve got you covered.
-    </p>
+      {/* --- Service Selection Section  --- */}
+      <section className="service-selection">
+        <div className="service-container">
+          <h2 className="service-title">
+            Choose the Service That’s Right for You
+          </h2>
+          <p className="service-subtitle">
+            Whether you need expert guidance or advanced tools, we’ve got you
+            covered.
+          </p>
 
-    <div className="service-options">
-      {/* Hire a Professional */}
-      <div className="option-card">
-        <div className="icon-wrapper primary">
-          <span className="material-symbols-outlined">CA</span>
+          <div className="service-options">
+            {/* Hire a Professional */}
+            <div className="option-card">
+              <div className="icon-wrapper primary">
+                <span className="material-symbols-outlined">CA</span>
+              </div>
+              <h3>Hire a Professional</h3>
+              <p>
+                Connect with our network of Chartered Accountants for
+                personalized support.
+              </p>
+              <button
+                className="option-btn primary-btn"
+                onClick={() => {
+                  navigate("/dashboard/user/caList");
+                }}
+              >
+                Find Your Expert
+              </button>
+            </div>
+
+            {/* Use AI Tools */}
+            <div className="option-card">
+              <div className="icon-wrapper secondary">
+                <span className="material-symbols-outlined">AI</span>
+              </div>
+              <h3>Use AI Tools</h3>
+              <p>
+                Utilize our AI-powered systems for fast, accurate, and
+                cost-effective filing.
+              </p>
+              <button className="option-btn secondary-btn">
+                Explore AI Tools
+              </button>
+            </div>
+          </div>
         </div>
-        <h3>Hire a Professional</h3>
-        <p>
-          Connect with our network of Chartered Accountants for personalized support.
-        </p>
-        <button className="option-btn primary-btn" onClick={()=>{
-          navigate("/dashboard/user/caList")
-        }}>Find Your Expert</button>
-      </div>
-
-      {/* Use AI Tools */}
-      <div className="option-card">
-        <div className="icon-wrapper secondary">
-          <span className="material-symbols-outlined">AI</span>
-        </div>
-        <h3>Use AI Tools</h3>
-        <p>
-          Utilize our AI-powered systems for fast, accurate, and cost-effective filing.
-        </p>
-        <button className="option-btn secondary-btn">Explore AI Tools</button>
-      </div>
-    </div>
-  </div>
-</section>
-
+      </section>
 
       {/* --- Transition Heading for Detailed Features --- */}
       <h2 className="section-transition-heading" id="core_feature">
         Explore Our Core Features
       </h2>
-        <p className="section-transition-subheading">Select Your Goal</p>
+      <p className="section-transition-subheading">Select Your Goal</p>
 
       {/* --- Service Sections --- */}
       <section className="service-blocks-section">
@@ -171,55 +227,83 @@ const HomePage = () => {
 
       {/* --- Footer --- */}
       <footer className="site-footer">
-            <div className="footer-container">
-                
-                {/* 1. Brand and Mission */}
-                <div className="footer-column brand-column">
-                    <h3 className="footer-logo">LegalHelp</h3>
-                    <p className="mission-statement">
-                        Simplifying legal and financial services. Combining expert **CA consultation** with powerful **AI tools** for tax saving and compliance.
-                    </p>
-                    <p className="copyright">&copy; 2025 LegalHelp. All rights reserved.</p>
-                </div>
+        <div className="footer-container">
+          {/* 1. Brand and Mission */}
+          <div className="footer-column brand-column">
+            <h3 className="footer-logo">LegalHelp</h3>
+            <p className="mission-statement">
+              Simplifying legal and financial services. Combining expert **CA
+              consultation** with powerful **AI tools** for tax saving and
+              compliance.
+            </p>
+            <p className="copyright">
+              &copy; 2025 LegalHelp. All rights reserved.
+            </p>
+          </div>
 
-                {/* 2. Core Services Links */}
-                <div className="footer-column">
-                    <h4>Our Services</h4>
-                    <ul>
-                        <li><a href="/predict-tax">Tax Prediction Tool</a></li>
-                        <li><a href="/hire-ca">Hire Verified CA</a></li>
-                        <li><a href="/tax-reduction">Tax Saving & Reduction</a></li>
-                        <li><a href="/finance-planning">Financial Planning</a></li>
-                        <li><a href="/legal-support">Law Related Issues</a></li>
-                    </ul>
-                </div>
+          {/* 2. Core Services Links */}
+          <div className="footer-column">
+            <h4>Our Services</h4>
+            <ul>
+              <li>
+                <a href="/predict-tax">Tax Prediction Tool</a>
+              </li>
+              <li>
+                <a href="/hire-ca">Hire Verified CA</a>
+              </li>
+              <li>
+                <a href="/tax-reduction">Tax Saving & Reduction</a>
+              </li>
+              <li>
+                <a href="/finance-planning">Financial Planning</a>
+              </li>
+              <li>
+                <a href="/legal-support">Law Related Issues</a>
+              </li>
+            </ul>
+          </div>
 
-                {/* 3. Company & Legal Links */}
-                <div className="footer-column">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="/careers">Careers (We're Hiring!)</a></li>
-                        <li><a href="/blog">Resource Blog</a></li>
-                        <li><a href="/privacy">Privacy Policy</a></li>
-                        <li><a href="/terms">Terms of Service</a></li>
-                    </ul>
-                </div>
+          {/* 3. Company & Legal Links */}
+          <div className="footer-column">
+            <h4>Company</h4>
+            <ul>
+              <li>
+                <a href="/about">About Us</a>
+              </li>
+              <li>
+                <a href="/careers">Careers (We're Hiring!)</a>
+              </li>
+              <li>
+                <a href="/blog">Resource Blog</a>
+              </li>
+              <li>
+                <a href="/privacy">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="/terms">Terms of Service</a>
+              </li>
+            </ul>
+          </div>
 
-                {/* 4. Contact & Tech Stack (Trust Building) */}
-                <div className="footer-column contact-column">
-                    <h4>Contact & Support</h4>
-                    <p>Email: <a href="mailto:support@legalhelp.in">support@legalhelp.in</a></p>
-                    <p>Phone: +91 98765 43210</p>
-                </div>
+          {/* 4. Contact & Tech Stack (Trust Building) */}
+          <div className="footer-column contact-column">
+            <h4>Contact & Support</h4>
+            <p>
+              Email:{" "}
+              <a href="mailto:support@legalhelp.in">support@legalhelp.in</a>
+            </p>
+            <p>Phone: +91 98765 43210</p>
+          </div>
+        </div>
 
-            </div>
-            
-            {/* Bottom Bar for Technology Info */}
-            <div className="footer-bottom-bar">
-                <p>Security powered by **Spring Security + JWT**. Financial intelligence driven by Python Machine Learning models.</p>
-            </div>
-        </footer>
+        {/* Bottom Bar for Technology Info */}
+        <div className="footer-bottom-bar">
+          <p>
+            Security powered by **Spring Security + JWT**. Financial
+            intelligence driven by Python Machine Learning models.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };

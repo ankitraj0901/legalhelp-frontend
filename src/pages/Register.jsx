@@ -65,14 +65,20 @@ const RegisterPage = () => {
 
     console.log("Sending JSON:", registrationData);
 
-    
     const API_ENDPOINT = "http://localhost:8080/user/register";
 
     try {
-      // Using Axios to send a POST request
-      const response = await axios.post(API_ENDPOINT, registrationData);
+      const response = await fetch(API_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registrationData),
+      });
 
-      console.log("Server Response:", response.data);
+      const data = await response.json();
+
+      console.log("Server Response:", data);
       alert(`Registration successful! Welcome, ${role}.`);
       navigate("/login");
 
@@ -92,10 +98,10 @@ const RegisterPage = () => {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx (e.g., 400, 409 Conflict)
-        console.error("Registration Error:", error.response.data);
+        console.error("Registration Error:", error.data);
         alert(
           `❌ Registration Failed: ${
-            error.response.data.message || "Check your details."
+            error.data.message || "Check your details."
           }`
         );
       } else if (error.request) {

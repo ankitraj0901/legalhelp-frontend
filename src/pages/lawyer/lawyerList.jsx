@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Header from "../../components/Header";
 
 const LawyerList = () => {
   const [lawyers, setLawyers] = useState([]);
@@ -49,7 +50,7 @@ const LawyerList = () => {
       );
 
       const data = response.data;
-      console.log("Response data: ",data);
+      console.log("Response data: ", data);
 
       if (data.existing) {
         toast.warning("You are already connected with this Lawyer.");
@@ -63,6 +64,8 @@ const LawyerList = () => {
   };
 
   return (
+    <>
+    <Header/>
     <section className="min-h-screen bg-gray-100">
       <div className="max-w-6xl mx-auto px-6 py-12">
         <div className="text-center mb-10">
@@ -137,6 +140,7 @@ const LawyerList = () => {
         </div>
       </div>
     </section>
+    </>
   );
 };
 

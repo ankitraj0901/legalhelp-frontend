@@ -1,4 +1,3 @@
-import React from "react";
 import "./Login.css";
 import { useState } from "react";
 import axios from "axios";
@@ -10,37 +9,27 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    const role = localStorage.getItem("role");
-
-    if (role === "CA") {
-        navigate("/dashboard/ca");
-      } else if (role === "USER") {
-        navigate("/user/dashboard");
-      } else if (role === "LAWYER") {
-        navigate("/dashboard/lawyer");
-      } else if (role === "CONSULTANT") {
-        navigate("/dashboard/consultant");
-      }
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/user/login", {
-        email,
-        password,
+      const response = await fetch("http://localhost:8080/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       });
+      const data = await response.json();
 
-      const token = response.data.token;
-      const role = response.data.role;
-      const userId = response.data.userId; 
+      const token = data.token;
+      const role = data.role;
+      const userId = data.userId;
 
       // store JWT + role
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
-      localStorage.setItem("userId",userId);
+      localStorage.setItem("userId", userId);
 
       // REDIRECT based on role
       if (role === "CA") {
@@ -53,7 +42,8 @@ function Login() {
         navigate("/dashboard/consultant");
       }
     } catch (err) {
-      alert("Invalid email or password");
+      console.log(err);
+      alert("Something went wrong");
     }
   };
 
