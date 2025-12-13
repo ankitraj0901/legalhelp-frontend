@@ -129,7 +129,7 @@ const LawyerList = () => {
                   </button>
                 ) : (
                   <button
-                    className="connect-btn"
+                    className="mt-5 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-all"
                     onClick={() => handleConnect(lawyer)}
                   >
                     Connect

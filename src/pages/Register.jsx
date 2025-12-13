@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
 import "./Register.css";
-import Navbar from "../components/Header";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [role, setRole] = useState("User");
@@ -76,21 +78,19 @@ const RegisterPage = () => {
         body: JSON.stringify(registrationData),
       });
 
-      const data = await response.json();
+      const data = await response
 
       console.log("Server Response:", data);
-      alert(`Registration successful! Welcome, ${role}.`);
       navigate("/login");
+      toast.success(`Registration successful! Welcome, ${role}.`)
 
-      // Optional: Reset form fields after successful submission
+
+      //Optional: Reset form fields after successful submission
       setFormData({
         name: "",
         email: "",
         password: "",
         confirmPassword: "",
-        registrationNo: "",
-        experience: "",
-        firmName: "",
       });
     } catch (error) {
       // Axios puts errors in error.response (if it's an HTTP error)
@@ -100,18 +100,18 @@ const RegisterPage = () => {
         // that falls out of the range of 2xx (e.g., 400, 409 Conflict)
         console.error("Registration Error:", error.data);
         alert(
-          `❌ Registration Failed: ${
+          `Registration Failed: ${
             error.data.message || "Check your details."
           }`
         );
       } else if (error.request) {
         // The request was made but no response was received (e.g., server down)
         console.error("Network Error:", error.request);
-        alert("❌ Network Error: Could not reach the server.");
+        toast.error("Network Error: Could not reach the server.");
       } else {
         // Something happened in setting up the request that triggered an Error
-        console.error("Error:", error.message);
-        alert("❌ An unexpected error occurred during submission.");
+        toast.error("An unexpected error occurred during submission.");
+
       }
     }
   };

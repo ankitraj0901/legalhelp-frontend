@@ -2,9 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import "./UserDashboard.css";
+import axios from "axios";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+  const name = localStorage.getItem("name");
+
+  // api to get user details and related data
   const user = {
     name: "Ankit",
     nextAction: { label: "Review Draft ITR", status: "Pending Action" },
@@ -20,6 +25,56 @@ const UserDashboard = () => {
       "Aadhaar Card.pdf",
       "Filed ITR-1 Acknowledgement.pdf",
     ],
+  };
+
+  //getting assigned assignment to the user
+
+  const [assignments, setAssignments] = useState([]);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+    serviceType: "",
+  });
+
+  const serviceTypes = [
+    "ITR_Filing",
+    "GST_Return",
+    "Property_Case",
+    "Legal_Notice",
+    "Divorce_Consultation",
+  ];
+
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
+  const fetchAssignments = async () => {
+    const res = await axios.get(
+      `http://localhost:8080/assignments/assigned-professional/${userId}`
+    );
+    setAssignments(res.data);
+    console.log(res);
+  };
+
+  const openForm = (assignment) => {
+    setSelectedAssignment(assignment);
+  };
+
+  const submitDetails = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/assignments/submit-details/${selectedAssignment.assignmentId}`,
+        formData
+      );
+      console.log(response);
+      await fetchAssignments();
+      setSelectedAssignment(null);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const [files, setFiles] = useState([]);
@@ -55,7 +110,7 @@ const UserDashboard = () => {
       <div className="dashboard-container">
         {/* A. Header */}
         <header className="dashboard-header">
-          <h1>Welcome back !{user.name}</h1>
+          <h1>Welcome back! {name}</h1>
           <p>Here's what's happening today 👇</p>
         </header>
 
@@ -79,15 +134,6 @@ const UserDashboard = () => {
         {/* C. Primary CTAs */}
         <section className="cta-section">
           {/* Opening Income tax website iin new tab  */}
-
-          {/* <a
-          className="cta-btn cta-blue"
-          href="https://www.incometax.gov.in/iec/foportal"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          File My Taxes Now
-        </a> */}
 
           <button
             className="cta-btn cta-blue"
@@ -150,19 +196,135 @@ const UserDashboard = () => {
         </section>
 
         {/* E. CA Support Status */}
-        <section className="ca-support">
-          <img src={user.ca.photo} alt="CA" className="ca-photo" />
-          <div className="ca-info">
-            <h3>{user.ca.name}</h3>
-            <p>
-              Last update on {user.ca.lastUpdate}: {user.ca.summary}
-            </p>
-          </div>
-          <div className="ca-actions">
-            <button className="btn chat-btn">Chat</button>
-            <button className="btn call-btn">Call</button>
-          </div>
-        </section>
+        {/* all the assignments are stored in assignment i am using map to extract assignment one by one and print them on the user dashboard */}
+        <div className="p-6 space-y-4">
+          {assignments.map((assignment) => (
+            <section
+              key={assignment.assignmentId}
+              className="flex items-center gap-4 p-4 bg-white shadow-md rounded-lg border"
+            >
+              {/* Avatar */}
+              <img
+                src="/default-photo.png"
+                alt="Professional"
+                className="w-14 h-14 rounded-full object-cover"
+              />
+
+              {/* Professional Info */}
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold flex items-center">
+                  {assignment.name}
+                  <span className="ml-1 px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
+                    {assignment.role}
+                  </span>
+                </h3>
+
+                <p className="text-sm text-gray-600">
+                  Status: {assignment.assignmentStatus}
+                </p>
+              </div>
+
+              {/* ⭐ Conditional Button (Submit or Chat) */}
+              <div>
+                {assignment.assignmentStatus === "AWAITING_DETAILS" ? (
+                  <button
+                    onClick={() => openForm(assignment)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Submit Details
+                  </button>
+                ) : (
+                  <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                    Chat
+                  </button>
+                )}
+              </div>
+            </section>
+          ))}
+
+          {selectedAssignment && (
+            <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex justify-center items-center z-50">
+              <div className="bg-white w-full max-w-md p-6 rounded-xl shadow-xl animate-fadeIn">
+                <h2 className="text-xl font-bold mb-4 text-gray-800">
+                  Submit Case Details
+                </h2>
+
+                <div className="space-y-4">
+                  {/* Title */}
+                  <input
+                    type="text"
+                    placeholder="Title"
+                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                  />
+
+                  {/* Description */}
+                  <textarea
+                    placeholder="Description"
+                    rows="3"
+                    className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                  />
+
+                  {/* Due Date */}
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">
+                      Due Date
+                    </label>
+                    <input
+                      type="date"
+                      className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                      value={formData.dueDate}
+                      onChange={(e) =>
+                        setFormData({ ...formData, dueDate: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  {/* Service Type Dropdown */}
+                  <select
+                    className="w-full p-2 border rounded-lg bg-white focus:ring-2 focus:ring-blue-400 outline-none"
+                    value={formData.serviceType}
+                    onChange={(e) =>
+                      setFormData({ ...formData, serviceType: e.target.value })
+                    }
+                  >
+                    <option value="">Select Service Type</option>
+
+                    {serviceTypes.map((service) => (
+                      <option key={service} value={service}>
+                        {service.replace("_", " ")}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex justify-end gap-3 mt-6">
+                  <button
+                    onClick={() => setSelectedAssignment(null)}
+                    className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={submitDetails}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* F. AI Tool Access */}
         <section className="ai-tools">

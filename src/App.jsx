@@ -16,7 +16,7 @@ import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <>
-    <ToastContainer />
+    <ToastContainer  />
     <Routes>
 
         {/* Public Routes */}

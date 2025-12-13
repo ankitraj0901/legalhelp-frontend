@@ -21,15 +21,20 @@ function Login() {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
+      console.log(data);
 
       const token = data.token;
       const role = data.role;
       const userId = data.userId;
+      const name = data.name;
+      // { token : "", user: {id, name, email}
+      // }
 
       // store JWT + role
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("name",name);
 
       // REDIRECT based on role
       if (role === "CA") {
