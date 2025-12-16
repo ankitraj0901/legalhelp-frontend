@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import "./UserDashboard.css";
@@ -329,18 +330,25 @@ const UserDashboard = () => {
         {/* F. AI Tool Access */}
         <section className="ai-tools">
           <h2>AI Tool Access</h2>
+
           <div className="tool-cards">
             <div className="tool-card blue">
+              <Link to="./tax-prediction" className="no-underline text-inherit">
               <h3>Tax Predictor</h3>
               <p>Explore now →</p>
+              </Link>
             </div>
             <div className="tool-card green">
+              <Link to="./tax-optimizer" className="no-underline text-inherit">
               <h3>Deduction Optimizer</h3>
               <p>Explore now →</p>
+              </Link>
             </div>
             <div className="tool-card yellow">
+              <Link to="./investment" className="no-underline text-inherit">
               <h3>Compliance Check</h3>
               <p>Explore now →</p>
+              </Link>
             </div>
           </div>
         </section>

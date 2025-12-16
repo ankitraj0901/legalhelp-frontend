@@ -10,7 +10,9 @@ import LawyerDashboard from "./pages/lawyer/lawyerDashboard";
 import ConsultantDashboard from "./pages/consultant/Consultant";
 import LawyerList from "./pages/lawyer/lawyerList";
 import ConsultantList from "./pages/consultant/consultantList";
+import TaxPrediction from "./pages/ml/TaxPrediction";
 import { ToastContainer } from "react-toastify";
+import Investment from "./pages/ml/Investment";
 
 
 function App() {
@@ -96,6 +98,28 @@ function App() {
           element={
             <RequireAuth allowedRoles={["USER"]}>
               <ConsultantList/>
+            </RequireAuth>
+          }
+        />
+
+        {/* Machine Learning Pages */}
+        {/* Tax prediction  */}
+        <Route 
+          path="/user/dashboard/tax-prediction" 
+          element={
+            <RequireAuth allowedRoles={["USER"]}>
+              <TaxPrediction/>
+            </RequireAuth>
+          }
+        />
+
+
+        {/* Investment suggestion  */}
+        <Route 
+          path="/user/dashboard/investment" 
+          element={
+            <RequireAuth allowedRoles={["USER"]}>
+              <Investment/>
             </RequireAuth>
           }
         />

@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./CADashboard.css";
 import Header from "../../components/Header";
+import axios from "axios";
 const CADashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [assignments,setAssignments] = useState([]);
+  const [selectedAssignment,setSelectedAssignment] = useState(null);
+
+  const professionalId = localStorage.getItem("userId");
 
   // Sample Data
   const kpis = {
@@ -28,33 +33,25 @@ const CADashboard = () => {
     { task: "Quarterly Report - Kiran", daysLeft: 10 },
   ];
 
-  const clients = [
-    {
-      name: "Vivek Patel",
-      service: "ITR Filing",
-      lastActivity: "Nov 4",
-      status: "Active",
-      dueDate: "Nov 10",
-    },
-    {
-      name: "Sana Khan",
-      service: "GST",
-      lastActivity: "Nov 6",
-      status: "Pending Docs",
-      dueDate: "Nov 9",
-    },
-    {
-      name: "Raj Verma",
-      service: "Audit",
-      lastActivity: "Nov 1",
-      status: "Completed",
-      dueDate: "Nov 15",
-    },
-  ];
+  
 
-  const filteredClients = clients.filter((c) =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+
+  useEffect(()=>{
+    fetchClients();
+  },[])
+
+  const fetchClients = async() =>{
+    const response = await axios.get(
+      `http://localhost:8080/ca/user-list/${professionalId}`
+    )
+    setAssignments(response.data);
+    console.log(response);
+  }
+
+  const filteredClients = assignments.filter((assignment) =>
+  assignment.name?.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
 
   return (
     <>
@@ -175,11 +172,11 @@ const CADashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredClients.map((c, i) => (
-              <tr key={i}>
-                <td>{c.name}</td>
-                <td>{c.service}</td>
-                <td>{c.status}</td>
+            {filteredClients.map((assignment,c) => (
+              <tr key={assignment.assignmentId}>
+                <td>{assignment.name}</td>
+                <td>{assignment.serviceType}</td>
+                <td>{assignment.assignmentStatus}</td>
                 <td>
                   <div className="progress-bar">
                     <div

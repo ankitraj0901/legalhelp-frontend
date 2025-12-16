@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 .nav-links a {
-  text-decoration: none;     /* removes underline */
-  color: white;              /* makes text white */
+  text-decoration: none;     
+  color: white;              
   font-weight: 500;
   font-size: 18px;
-  transition: color 0.3s ease;   /* smooth animation */
-}
+   transition: color 0.3s ease;   /*smooth animation  */
+} 
 .nav-links a:hover {
-  color: #00bcd4;   /* change this to any color you like */
+  color: #00bcd4;    /*change this to any color you like */
 }
