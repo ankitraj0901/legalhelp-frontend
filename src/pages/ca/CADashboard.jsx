@@ -91,6 +91,32 @@ const CADashboard = () => {
     return Math.ceil((due - today) / (1000 * 60 * 60 * 24));
   };
 
+  /* checking which client has status Awaiting_details*/
+  const pendingAction = assignments.filter(
+    (assignment) => assignment.assignmentStatus === "AWAITING_DETAILS"
+  );
+
+  /* Getting the client which assiged to ca today itself */
+
+  const today = new Date().toISOString().split("T")[0];
+
+  // 2️ Filter assignments assigned today
+  const todayLeads = assignments.filter((assignment) => {
+    return assignment.assignmentDate === today;
+  });
+
+  // 3️ Optional: Decide lead label (New / Follow-up / Urgent)
+  const getLeadStatus = (assignment) => {
+    if (assignment.assignmentStatus === "AWAITING_DETAILS") {
+      return "New";
+    }
+    return "Follow-up";
+  };
+
+  // Debug (optional)
+  console.log("Today's Date:", today);
+  console.log("Today Leads:", todayLeads);
+
   return (
     <>
       <Header></Header>
@@ -122,27 +148,26 @@ const CADashboard = () => {
         <section className="action-queue">
           <div className="queue-section">
             <h2>New Client Leads</h2>
-            <ul>
-              {clientLeads.map((lead, i) => (
-                <li key={i}>
-                  {lead.name}{" "}
-                  <span
-                    className={`status-tag ${
-                      lead.status === "Urgent"
-                        ? "tag-red"
-                        : lead.status === "Follow-up"
-                        ? "tag-yellow"
-                        : "tag-blue"
-                    }`}
-                  >
-                    {lead.status}
-                  </span>
-                </li>
-              ))}
-            </ul>
+
+            {todayLeads.length === 0 ? (
+              <p className="empty-text">No new client leads today</p>
+            ) : (
+              <ul>
+                {todayLeads.map((lead, i) => (
+                  <li key={i}>
+                    {lead.name}{" "}
+                    <span className="status-tag tag-blue">
+                      {getLeadStatus(lead)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
-          <div className="queue-section">
+          {/* Pending Action from client */}
+
+          {/* <div className="queue-section">
             <h2>Pending Client Actions</h2>
             <ul>
               {pendingActions.map((a, i) => (
@@ -151,6 +176,25 @@ const CADashboard = () => {
                 </li>
               ))}
             </ul>
+          </div> */}
+
+          <div className="queue-section">
+            <h2>Pending Client Actions</h2>
+
+            {pendingActions.length === 0 ? (
+              <p>No pending client actions</p>
+            ) : (
+              <ul>
+                {pendingAction.map((a, i) => (
+                  <li key={i}>
+                    {a.assignmentStatus} from {a.name}
+                    {/* <span className="due-date">
+            Due: {new Date(a.dueDate).toLocaleDateString()}
+          </span> */}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* displaying the client deadline on the cards */}
@@ -220,7 +264,7 @@ const CADashboard = () => {
                 <th>Client Name</th>
                 <th>Service Type</th>
                 <th>Status</th>
-                <th>Progress</th>
+                <th>Message</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -231,13 +275,19 @@ const CADashboard = () => {
                   <td>{assignment.serviceType}</td>
                   <td>{assignment.assignmentStatus}</td>
                   <td>
-                    <div className="progress-bar">
-                      <div
-                        className="progress"
-                        style={{ width: c.progress + "%" }}
-                      ></div>
-                    </div>
-                    <span>{c.progress}%</span>
+                    <button
+                      onClick={() => navigate(`/chat/${assignment.clientId}`)}
+                      className="
+      inline-flex items-center gap-2
+      bg-green-500 hover:bg-green-600
+      text-white font-medium
+      px-4 py-2
+      rounded-md
+      transition-colors
+    "
+                    >
+                      Chat
+                    </button>
                   </td>
                   <td>
                     <button
