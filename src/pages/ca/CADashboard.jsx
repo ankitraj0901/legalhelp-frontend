@@ -3,7 +3,12 @@ import "./CADashboard.css";
 import Header from "../../components/Header";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { Chatbox } from "@talkjs/react-components";
+import "@talkjs/react-components/default.css";
+
 const CADashboard = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [assignmentCount, setAssignmentCount] = useState(null);
@@ -275,8 +280,17 @@ const CADashboard = () => {
                   <td>{assignment.serviceType}</td>
                   <td>{assignment.assignmentStatus}</td>
                   <td>
+                    {/* Chat button  */}
                     <button
-                      onClick={() => navigate(`/chat/${assignment.clientId}`)}
+                      onClick={() =>
+                        navigate(
+                          `/dashboard/ca/chat?conv_id=${
+                            assignment.assignmentId
+                          }&id=${assignment.clientId}&role=${
+                            assignment.role
+                          }&name=${encodeURIComponent(assignment.name)}`
+                        )
+                      }
                       className="
       inline-flex items-center gap-2
       bg-green-500 hover:bg-green-600

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
+import ChatPage from "../chat/chat";
 import "./UserDashboard.css";
 import axios from "axios";
 
@@ -235,7 +236,19 @@ const UserDashboard = () => {
                     Submit Details
                   </button>
                 ) : (
-                  <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                  // chat Button
+                  <button
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                    onClick={() => {
+                      navigate(
+                        `/user/dashboard/chat?conv_id=${
+                          assignment.assignmentId
+                        }&id=${assignment.clientId}&role=${
+                          assignment.role
+                        }&name=${encodeURIComponent(assignment.name)}`
+                      );
+                    }}
+                  >
                     Chat
                   </button>
                 )}
@@ -334,20 +347,20 @@ const UserDashboard = () => {
           <div className="tool-cards">
             <div className="tool-card blue">
               <Link to="./tax-prediction" className="no-underline text-inherit">
-              <h3>Tax Predictor</h3>
-              <p>Explore now →</p>
+                <h3>Tax Predictor</h3>
+                <p>Explore now →</p>
               </Link>
             </div>
             <div className="tool-card green">
               <Link to="./tax-optimizer" className="no-underline text-inherit">
-              <h3>Deduction Optimizer</h3>
-              <p>Explore now →</p>
+                <h3>Deduction Optimizer</h3>
+                <p>Explore now →</p>
               </Link>
             </div>
             <div className="tool-card yellow">
               <Link to="./investment" className="no-underline text-inherit">
-              <h3>Compliance Check</h3>
-              <p>Explore now →</p>
+                <h3>Compliance Check</h3>
+                <p>Explore now →</p>
               </Link>
             </div>
           </div>

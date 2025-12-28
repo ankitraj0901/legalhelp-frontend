@@ -1,0 +1,29 @@
+/* Make entire page fullscreen */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+/* Fullscreen wrapper */
+.talkjs-fullscreen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f5f5f5;
+  display: flex;
+}
+
+/* Chat container must stretch */
+.talkjs-container {
+  flex: 1;
+}
+
+/* Force TalkJS iframe to fill space */
+.talkjs-container iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none;
+}

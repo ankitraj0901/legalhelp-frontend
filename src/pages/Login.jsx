@@ -89,11 +89,9 @@ function Login() {
           </p>
         </form>
 
-        <div className="divider">
-          <span>OR</span>
-        </div>
+        {/*  */}
 
-        <div className="social-buttons">
+        {/* <div className="social-buttons">
           <button className="google-btn">
             <img
               src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -101,7 +99,7 @@ function Login() {
             />
             Continue with Google
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

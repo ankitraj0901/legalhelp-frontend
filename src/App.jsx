@@ -13,6 +13,7 @@ import ConsultantList from "./pages/consultant/consultantList";
 import TaxPrediction from "./pages/ml/TaxPrediction";
 import { ToastContainer } from "react-toastify";
 import Investment from "./pages/ml/Investment";
+import ChatPage from "./pages/chat/chat";
 
 
 function App() {
@@ -109,6 +110,25 @@ function App() {
           element={
             <RequireAuth allowedRoles={["USER"]}>
               <TaxPrediction/>
+            </RequireAuth>
+          }
+        />
+
+        {/* Chat Page */}
+        {/* One-to-One chat page  */}
+        <Route 
+          path="/user/dashboard/chat" 
+          element={
+            <RequireAuth allowedRoles={["USER"]}>
+              <ChatPage/>
+            </RequireAuth>
+          }
+        />
+        <Route 
+          path="/dashboard/ca/chat" 
+          element={
+            <RequireAuth allowedRoles={["CA"]}>
+              <ChatPage/>
             </RequireAuth>
           }
         />

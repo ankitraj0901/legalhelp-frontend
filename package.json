@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@talkjs/core": "^1.6.0",
+    "@talkjs/react-components": "^0.0.32",
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
     "chart.js": "^4.5.1",
+    "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.552.0",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
@@ -21,7 +24,8 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "^6.30.1",
     "react-toastify": "^11.0.5",
-    "recharts": "^3.4.1"
+    "recharts": "^3.4.1",
+    "talkjs": "^0.42.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
