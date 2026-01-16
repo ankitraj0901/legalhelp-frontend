@@ -1,4 +1,3 @@
-import React from "react";
 import "./Home.css";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -10,24 +9,19 @@ const ServiceBlock = ({
   ctaText,
   imagePath,
   reverse,
-  onCtaClick, 
+  onCtaClick,
 }) => (
   <div className={`service-block ${reverse ? "reverse" : ""}`}>
     <div className="text-content">
       <h3>{title}</h3>
       <p>{description}</p>
 
-       {/* CTA BUTTON */}
+      {/* CTA BUTTON */}
       {ctaText && (
-        <button
-          type="button"
-          className="block-cta-btn"
-          onClick={onCtaClick}
-        >
+        <button type="button" className="block-cta-btn" onClick={onCtaClick}>
           {ctaText}
         </button>
       )}
-
     </div>
     <div className="image-content">
       <img src={imagePath} alt={title} />
@@ -156,10 +150,10 @@ const HomePage = () => {
                 Utilize our AI-powered systems for fast, accurate, and
                 cost-effective filing.
               </p>
-              <button 
-                className="option-btn secondary-btn" 
+              <button
+                className="option-btn secondary-btn"
                 onClick={() => {
-                  navigate("/user/dashboard/tax-prediction")
+                  navigate("/user/dashboard/tax-prediction");
                 }}
               >
                 Explore AI Tools
@@ -193,7 +187,7 @@ const HomePage = () => {
           ctaText="Find Your Expert CA"
           imagePath="./tax4.jpg"
           reverse={true}
-          onCtaClick = {() => navigate("/user/dashboard/caList")}
+          onCtaClick={() => navigate("/user/dashboard/caList")}
         />
 
         <ServiceBlock
@@ -203,7 +197,7 @@ const HomePage = () => {
           ctaText="Start Planning Your Future"
           imagePath="./financePlanning.jpg"
           reverse={false}
-          onCtaClick = {() => navigate("/user/dashboard/consultantList")}
+          onCtaClick={() => navigate("/user/dashboard/consultantList")}
         />
 
         <ServiceBlock
@@ -212,7 +206,7 @@ const HomePage = () => {
           ctaText="Get Legal Consultation"
           imagePath="law.jpg"
           reverse={true}
-          onCtaClick = {() => navigate("/user/dashboard/lawyerList")}
+          onCtaClick={() => navigate("/user/dashboard/lawyerList")}
         />
 
         {/* NOTE: The duplicated 'Maximize Tax Reduction & Savings' block previously here has been removed for page cleanliness. */}
