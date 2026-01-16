@@ -55,7 +55,7 @@ const UserDashboard = () => {
 
   const fetchAssignments = async () => {
     const res = await axios.get(
-      `http://localhost:8080/assignments/assigned-professional/${userId}`
+      `${process.env.REACT_APP_API_URL}/assignments/assigned-professional/${userId}`
     );
     setAssignments(res.data);
     console.log(res);
@@ -68,7 +68,7 @@ const UserDashboard = () => {
   const submitDetails = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:8080/assignments/submit-details/${selectedAssignment.assignmentId}`,
+        `${process.env.REACT_APP_API_URL}/assignments/submit-details/${selectedAssignment.assignmentId}`,
         formData
       );
       console.log(response);

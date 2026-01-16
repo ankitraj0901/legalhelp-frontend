@@ -53,7 +53,7 @@ const CADashboard = () => {
   const fetchClients = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/ca/clients-list/${professionalId}`
+        `${process.env.REACT_APP_API_URL}/ca/clients-list/${professionalId}`
       );
       setAssignments(response.data);
       console.log("Hello");
@@ -77,7 +77,7 @@ const CADashboard = () => {
   const fetchClientCount = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/ca/clients-count/${professionalId}`
+        `${process.env.REACT_APP_API_URL}/ca/clients-count/${professionalId}`
       );
       setAssignmentCount(response.data);
     } catch (error) {

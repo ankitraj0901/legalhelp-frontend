@@ -23,7 +23,7 @@ const CAList = () => {
       const clientId = Number(String(userId).trim());
       try {
         const response = await fetch(
-          `http://localhost:8080/user/ca-list/${clientId}`,
+          `${process.env.REACT_APP_API_URL}/user/ca-list/${clientId}`,
           {
             method: "GET",
             headers: {
@@ -50,7 +50,7 @@ const CAList = () => {
     // setSelectedCA(ca);
     try {
       const response = await axios.post(
-        "http://localhost:8080/assignments/assign-ca",
+        `${process.env.REACT_APP_API_URL}/assignments/assign-ca`,
         {
           clientId: userId,
           professionalId: ca.userId,
@@ -79,90 +79,93 @@ const CAList = () => {
   return (
     <>
       <Header></Header>
-    <section className="ca-list-section">
-      <div className="ca-list-header">
-        <h2>Find Your Chartered Accountant</h2>
-        <p>
-          Connect with verified professionals for tax advice, audits, and
-          financial planning. Simplify your accounting needs today.
-        </p>
-      </div>
+      <section className="ca-list-section">
+        <div className="ca-list-header">
+          <h2>Find Your Chartered Accountant</h2>
+          <p>
+            Connect with verified professionals for tax advice, audits, and
+            financial planning. Simplify your accounting needs today.
+          </p>
+        </div>
 
-      {/* Extracting details of Ca from the Returned List */}
-      {loading && <p className="loading">Loading CA list...</p>}
-      {error && <p className="error">{error}</p>}
+        {/* Extracting details of Ca from the Returned List */}
+        {loading && <p className="loading">Loading CA list...</p>}
+        {error && <p className="error">{error}</p>}
 
-      <div className="ca-card-container">
-        {!loading &&
-          !error &&
-          caList &&
-          caList.map((ca) => (
-            <div className="ca-card" key={ca.id}>
-              <div className="ca-card-header">
-                <img
-                  src={
-                    ca.image ||
-                    "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
-                  }
-                  alt={ca.name}
-                  className="ca-avatar"
-                />
-                <div className="ca-info-header">
-                  <h3>{ca.name}</h3>
-                  <span className="ca-rating">⭐ {4.5} / 5</span>
+        <div className="ca-card-container">
+          {!loading &&
+            !error &&
+            caList &&
+            caList.map((ca) => (
+              <div className="ca-card" key={ca.id}>
+                <div className="ca-card-header">
+                  <img
+                    src={
+                      ca.image ||
+                      "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
+                    }
+                    alt={ca.name}
+                    className="ca-avatar"
+                  />
+                  <div className="ca-info-header">
+                    <h3>{ca.name}</h3>
+                    <span className="ca-rating">⭐ {4.5} / 5</span>
+                  </div>
                 </div>
-              </div>
 
-              <div className="ca-info">
-                <p>
-                  <strong>Email:</strong> {ca.email}
-                </p>
-                <p>
-                  <strong>Experience:</strong> {ca.experience}
-                </p>
-                <p>
-                  <strong>Specialization:</strong> {ca.specialization}
-                </p>
-                {/* <p>
+                <div className="ca-info">
+                  <p>
+                    <strong>Email:</strong> {ca.email}
+                  </p>
+                  <p>
+                    <strong>Experience:</strong> {ca.experience}
+                  </p>
+                  <p>
+                    <strong>Specialization:</strong> {ca.specialization}
+                  </p>
+                  {/* <p>
                 <strong>Clients Served:</strong> {ca.clients}+ 
               </p> */}
-              </div>
+                </div>
 
-              {/* <button className="connect-btn" onClick={() => handleConnect(ca)}>
+                {/* <button className="connect-btn" onClick={() => handleConnect(ca)}>
                 Connect Now
               </button> */}
 
-              {ca.assigned ? (
-                <button className="connected-btn" disabled>
-                  Connected
-                </button>
-              ) : (
-                <button
-                  className="connect-btn"
-                  onClick={() => handleConnect(ca)}
-                >
-                  Connect
-                </button>
-              )}
-            </div>
-          ))}
-      </div>
-
-      {selectedCA && (
-        <div className="ca-popup">
-          <div className="popup-content">
-            <h4>Request Sent Successfully</h4>
-            <p>
-              Your request has been sent to <strong>{selectedCA.name}</strong>.
-              They will reach out to you shortly.
-            </p>
-            <button className="close-popup" onClick={() => setSelectedCA(null)}>
-              Close
-            </button>
-          </div>
+                {ca.assigned ? (
+                  <button className="connected-btn" disabled>
+                    Connected
+                  </button>
+                ) : (
+                  <button
+                    className="connect-btn"
+                    onClick={() => handleConnect(ca)}
+                  >
+                    Connect
+                  </button>
+                )}
+              </div>
+            ))}
         </div>
-      )}
-    </section>
+
+        {selectedCA && (
+          <div className="ca-popup">
+            <div className="popup-content">
+              <h4>Request Sent Successfully</h4>
+              <p>
+                Your request has been sent to <strong>{selectedCA.name}</strong>
+                . They will reach out to you shortly.
+              </p>
+              <button
+                className="close-popup"
+                onClick={() => setSelectedCA(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
     </>
   );
 };

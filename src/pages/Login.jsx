@@ -13,13 +13,16 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/user/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
       const data = await response.json();
       console.log(data);
 
@@ -34,7 +37,7 @@ function Login() {
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
       localStorage.setItem("userId", userId);
-      localStorage.setItem("name",name);
+      localStorage.setItem("name", name);
 
       // REDIRECT based on role
       if (role === "CA") {

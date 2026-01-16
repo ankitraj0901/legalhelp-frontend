@@ -67,10 +67,9 @@ Update backend URL in:
 
 src/services/api.ts
 
-
 Example:
 
-export const API_BASE_URL = "http://localhost:8080";
+export const API_BASE_URL = "process.env.REACT_APP_API_URL";
 
 📁 ### **Project Structure**
 
@@ -84,7 +83,9 @@ src/
 ├── App.tsx            # App entry + routes
 └── main.tsx           # React DOM bootstrap
 ```
+
 📁 ### **Detailed Frontend Structure**
+
 ```txt
 src/
 ├── assets/            # Images, icons, logos (optional folder)
@@ -122,6 +123,7 @@ src/
 └── main.tsx           # React + Vite entry point
 
 ```
+
 ⭐ Show Your Support
 
 If you found this project helpful, consider giving it a ⭐ star on GitHub!

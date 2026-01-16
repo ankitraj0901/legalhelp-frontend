@@ -67,7 +67,7 @@ const RegisterPage = () => {
 
     console.log("Sending JSON:", registrationData);
 
-    const API_ENDPOINT = "http://localhost:8080/user/register";
+    const API_ENDPOINT = `${process.env.REACT_APP_API_URL}/user/register`;
 
     try {
       const response = await fetch(API_ENDPOINT, {
@@ -78,12 +78,11 @@ const RegisterPage = () => {
         body: JSON.stringify(registrationData),
       });
 
-      const data = await response
+      const data = await response;
 
       console.log("Server Response:", data);
       navigate("/login");
-      toast.success(`Registration successful! Welcome, ${role}.`)
-
+      toast.success(`Registration successful! Welcome, ${role}.`);
 
       //Optional: Reset form fields after successful submission
       setFormData({
@@ -100,9 +99,7 @@ const RegisterPage = () => {
         // that falls out of the range of 2xx (e.g., 400, 409 Conflict)
         console.error("Registration Error:", error.data);
         alert(
-          `Registration Failed: ${
-            error.data.message || "Check your details."
-          }`
+          `Registration Failed: ${error.data.message || "Check your details."}`
         );
       } else if (error.request) {
         // The request was made but no response was received (e.g., server down)
@@ -111,7 +108,6 @@ const RegisterPage = () => {
       } else {
         // Something happened in setting up the request that triggered an Error
         toast.error("An unexpected error occurred during submission.");
-
       }
     }
   };
