@@ -45,7 +45,7 @@ function Login() {
       } else if (role === "USER") {
         navigate("/user/dashboard");
       } else if (role === "LAWYER") {
-        navigate("/dashboard/lawyer");
+        navigate("/lawyer/dashboard");
       } else if (role === "CONSULTANT") {
         navigate("/dashboard/consultant");
       }
