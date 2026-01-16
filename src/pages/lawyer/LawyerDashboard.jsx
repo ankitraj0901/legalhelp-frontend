@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FaHome,
   FaFolderOpen,
@@ -15,7 +14,6 @@ import {
 import { useNavigate } from "react-router-dom";
 
 export default function LawyerDashboard() {
-
   const navigate = useNavigate();
 
   const logout = () => {
@@ -23,7 +21,6 @@ export default function LawyerDashboard() {
     localStorage.removeItem("role");
     navigate("/login");
   };
-
 
   // Updated Stats (Pending Client removed)
   const stats = [
@@ -34,14 +31,28 @@ export default function LawyerDashboard() {
   ];
 
   const clientsList = [
-    { name: "Rohit Sharma", caseType: "Civil Dispute", status: "Active", progress: 70 },
-    { name: "Ayesha Khan", caseType: "Family Law", status: "Pending Docs", progress: 50 },
-    { name: "Dhruv Mehta", caseType: "Corporate", status: "Completed", progress: 100 },
+    {
+      name: "Rohit Sharma",
+      caseType: "Civil Dispute",
+      status: "Active",
+      progress: 70,
+    },
+    {
+      name: "Ayesha Khan",
+      caseType: "Family Law",
+      status: "Pending Docs",
+      progress: 50,
+    },
+    {
+      name: "Dhruv Mehta",
+      caseType: "Corporate",
+      status: "Completed",
+      progress: 100,
+    },
   ];
 
   return (
     <div className="flex min-h-screen bg-white text-gray-800">
-
       {/* Sidebar */}
       <aside className="w-64 bg-[#0D1B2A] text-white flex flex-col py-8 px-6">
         <h1 className="text-3xl font-semibold mb-10">LegalHelp</h1>
@@ -66,7 +77,6 @@ export default function LawyerDashboard() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-
         {/* Topbar */}
         <header className="flex justify-between items-center bg-white border-b px-8 py-4 shadow-sm">
           <h2 className="text-xl font-bold">Welcome, Lawyer</h2>
@@ -76,7 +86,10 @@ export default function LawyerDashboard() {
 
             <FaUserCircle className="text-gray-600 text-3xl" />
 
-            <button className="flex items-center gap-2 bg-[#2563EB] text-white px-4 py-2 rounded-lg hover:bg-[#1E40AF] transition" onClick={logout}>
+            <button
+              className="flex items-center gap-2 bg-[#2563EB] text-white px-4 py-2 rounded-lg hover:bg-[#1E40AF] transition"
+              onClick={logout}
+            >
               <FaSignOutAlt /> Logout
             </button>
           </div>
@@ -84,7 +97,6 @@ export default function LawyerDashboard() {
 
         {/* Dashboard Body */}
         <main className="p-8 space-y-10">
-
           {/* Stats */}
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((s, idx) => (
@@ -148,7 +160,6 @@ export default function LawyerDashboard() {
               </tbody>
             </table>
           </section>
-
         </main>
       </div>
     </div>
