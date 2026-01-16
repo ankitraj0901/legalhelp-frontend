@@ -30,8 +30,6 @@ function Login() {
       const role = data.role;
       const userId = data.userId;
       const name = data.name;
-      // { token : "", user: {id, name, email}
-      // }
 
       // store JWT + role
       localStorage.setItem("token", token);
