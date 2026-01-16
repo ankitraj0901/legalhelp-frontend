@@ -1,19 +1,19 @@
 import {Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import UserDashboard from "./pages/user/UserDashboard";
-import CADashboard from "./pages/ca/CADashboard";
+import Home from "@/pages/Home";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import UserDashboard from "@/pages/user/UserDashboard";
+import CADashboard from "@/pages/ca/CADashboard";
 import RequireAuth from "./auth/RequireAuth";
-import CAList from "./pages/ca/CAList";
-import LawyerDashboard from "./pages/lawyer/lawyerDashboard";
-import ConsultantDashboard from "./pages/consultant/Consultant";
-import LawyerList from "./pages/lawyer/lawyerList";
-import ConsultantList from "./pages/consultant/consultantList";
-import TaxPrediction from "./pages/ml/TaxPrediction";
+import CAList from "@/pages/ca/CAList";
+import LawyerDashboard from "@/pages/lawyer/LawyerDashboard";
+import ConsultantDashboard from "@/pages/consultant/Consultant";
+import LawyerList from "@/pages/lawyer/lawyerList";
+import ConsultantList from "@/pages/consultant/consultantList";
+import TaxPrediction from "@/pages/ml/TaxPrediction";
 import { ToastContainer } from "react-toastify";
-import Investment from "./pages/ml/Investment";
-import ChatPage from "./pages/chat/chat";
+import Investment from "@/pages/ml/Investment";
+import ChatPage from "@/pages/chat/chat";
 
 
 function App() {
