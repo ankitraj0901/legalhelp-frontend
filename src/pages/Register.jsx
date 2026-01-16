@@ -67,7 +67,7 @@ const RegisterPage = () => {
 
     console.log("Sending JSON:", registrationData);
 
-    const API_ENDPOINT = `${process.env.REACT_APP_API_URL}/user/register`;
+    const API_ENDPOINT = `${import.meta.env.VITE_API_URL}/user/register`;
 
     try {
       const response = await fetch(API_ENDPOINT, {

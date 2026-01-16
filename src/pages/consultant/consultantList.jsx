@@ -18,7 +18,7 @@ const ConsultantList = () => {
       const clientId = Number(String(userId).trim());
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/user/consultant-list/${clientId}`
+          `${import.meta.env.VITE_API_URL}/user/consultant-list/${clientId}`
         );
         console.log(response);
         setConsultants(response.data);
@@ -34,7 +34,7 @@ const ConsultantList = () => {
   const handleConnect = async (consultant) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/assignments/assign-consultant`,
+        `${import.meta.env.VITE_API_URL}/assignments/assign-consultant`,
         {
           clientId: userId,
           professionalId: consultant.userId,

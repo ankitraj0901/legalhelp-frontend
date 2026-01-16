@@ -69,7 +69,7 @@ src/services/api.ts
 
 Example:
 
-export const API_BASE_URL = "process.env.REACT_APP_API_URL";
+export const API_BASE_URL = "import.meta.env.VITE_API_URL";
 
 📁 ### **Project Structure**
 

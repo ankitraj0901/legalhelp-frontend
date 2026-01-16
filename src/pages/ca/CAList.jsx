@@ -23,7 +23,7 @@ const CAList = () => {
       const clientId = Number(String(userId).trim());
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/user/ca-list/${clientId}`,
+          `${import.meta.env.VITE_API_URL}/user/ca-list/${clientId}`,
           {
             method: "GET",
             headers: {
@@ -50,7 +50,7 @@ const CAList = () => {
     // setSelectedCA(ca);
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/assignments/assign-ca`,
+        `${import.meta.env.VITE_API_URL}/assignments/assign-ca`,
         {
           clientId: userId,
           professionalId: ca.userId,

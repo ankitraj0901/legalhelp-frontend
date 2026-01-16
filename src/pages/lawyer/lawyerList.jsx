@@ -18,7 +18,7 @@ const LawyerList = () => {
       const clientId = Number(String(userId).trim());
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/user/lawyer-list/${clientId}`
+          `${import.meta.env.VITE_API_URL}/user/lawyer-list/${clientId}`
         );
         console.log(response);
         setLawyers(response.data);
@@ -33,11 +33,11 @@ const LawyerList = () => {
 
   const handleConnect = async (lawyer) => {
     // console.log("clientId =", userId);
-    // console.log("Final URL =", `process.env.REACT_APP_API_URL/user/lawyer-list/${userId}`);
+    // console.log("Final URL =", `import.meta.env.VITE_API_URL/user/lawyer-list/${userId}`);
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/assignments/assign-lawyer`,
+        `${import.meta.env.VITE_API_URL}/assignments/assign-lawyer`,
         {
           clientId: userId,
           professionalId: lawyer.userId,

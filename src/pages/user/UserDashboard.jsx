@@ -55,7 +55,9 @@ const UserDashboard = () => {
 
   const fetchAssignments = async () => {
     const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/assignments/assigned-professional/${userId}`
+      `${
+        import.meta.env.VITE_API_URL
+      }/assignments/assigned-professional/${userId}`
     );
     setAssignments(res.data);
     console.log(res);
@@ -68,7 +70,9 @@ const UserDashboard = () => {
   const submitDetails = async () => {
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/assignments/submit-details/${selectedAssignment.assignmentId}`,
+        `${import.meta.env.VITE_API_URL}/assignments/submit-details/${
+          selectedAssignment.assignmentId
+        }`,
         formData
       );
       console.log(response);
