@@ -1,5 +1,4 @@
-import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   FaHome,
   FaUsers,
@@ -24,31 +23,52 @@ const overviewData = [
 ];
 
 const clientsList = [
-  { name: "Vivek Patel", service: "ITR Filing", status: "Active", progress: 70 },
+  {
+    name: "Vivek Patel",
+    service: "ITR Filing",
+    status: "Active",
+    progress: 70,
+  },
   { name: "Sana Khan", service: "GST", status: "Pending Docs", progress: 50 },
   { name: "Raj Verma", service: "Audit", status: "Completed", progress: 100 },
 ];
 
 const upcomingMeetings = [
-  { date: "Nov 20", time: "10:00 AM", client: "John Doe", subject: "Tax Review" },
-  { date: "Nov 22", time: "2:00 PM", client: "Anna Smith", subject: "Compliance Check" },
-  { date: "Nov 25", time: "11:30 AM", client: "Michael Lee", subject: "Business Setup" },
+  {
+    date: "Nov 20",
+    time: "10:00 AM",
+    client: "John Doe",
+    subject: "Tax Review",
+  },
+  {
+    date: "Nov 22",
+    time: "2:00 PM",
+    client: "Anna Smith",
+    subject: "Compliance Check",
+  },
+  {
+    date: "Nov 25",
+    time: "11:30 AM",
+    client: "Michael Lee",
+    subject: "Business Setup",
+  },
 ];
 
 export default function ConsultantDashboard() {
-
   const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     navigate("/login");
-  }
+  };
   return (
     <div className="min-h-screen flex bg-white font-sans text-gray-800">
       {/* Sidebar */}
       <aside className="w-64 bg-[#0D1B2A] text-white flex flex-col py-8 px-6 shadow-lg">
-        <h1 className="text-3xl font-semibold mb-10 tracking-wide">LegalHelp</h1>
+        <h1 className="text-3xl font-semibold mb-10 tracking-wide">
+          LegalHelp
+        </h1>
         <nav className="flex flex-col gap-4">
           {sidebarItems.map((item, idx) => (
             <button
@@ -87,7 +107,10 @@ export default function ConsultantDashboard() {
               className="rounded-full w-10 h-10 border-2 border-[#2563EB]"
             />
 
-            <button className="bg-[#2563EB] text-white px-5 py-2 rounded-lg hover:bg-[#1E40AF] transition flex items-center gap-2" onClick={logout}>
+            <button
+              className="bg-[#2563EB] text-white px-5 py-2 rounded-lg hover:bg-[#1E40AF] transition flex items-center gap-2"
+              onClick={logout}
+            >
               <FaSignOutAlt /> Logout
             </button>
           </div>
@@ -103,7 +126,9 @@ export default function ConsultantDashboard() {
                 className="bg-white shadow-lg rounded-xl p-6 hover:shadow-2xl transition cursor-pointer"
               >
                 <h3 className="text-gray-500 font-semibold mb-2">{label}</h3>
-                <p className="text-3xl font-extrabold text-[#1E40AF]">{value}</p>
+                <p className="text-3xl font-extrabold text-[#1E40AF]">
+                  {value}
+                </p>
               </div>
             ))}
           </section>
