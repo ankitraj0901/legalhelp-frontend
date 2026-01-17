@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -18,7 +18,7 @@ const ConsultantList = () => {
       const clientId = Number(String(userId).trim());
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user/consultant-list/${clientId}`
+          `${import.meta.env.VITE_API_URL}/user/consultant-list/${clientId}`,
         );
         console.log(response);
         setConsultants(response.data);
@@ -43,7 +43,7 @@ const ConsultantList = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       //extracting the response from backend
