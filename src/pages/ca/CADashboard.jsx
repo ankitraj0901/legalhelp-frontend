@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./CADashboard.css";
 import Header from "../../components/Header";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { Chatbox } from "@talkjs/react-components";
 import "@talkjs/react-components/default.css";
 
 const CADashboard = () => {
@@ -53,7 +52,7 @@ const CADashboard = () => {
   const fetchClients = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/ca/clients-list/${professionalId}`
+        `${import.meta.env.VITE_API_URL}/ca/clients-list/${professionalId}`,
       );
       setAssignments(response.data);
       console.log("Hello");
@@ -66,7 +65,7 @@ const CADashboard = () => {
 
   /* filtering clien show in the professional dashboard*/
   const filteredClients = assignments.filter((assignment) =>
-    assignment.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    assignment.name?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   /* COUNT Number of clients to the current professional */
@@ -77,7 +76,7 @@ const CADashboard = () => {
   const fetchClientCount = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/ca/clients-count/${professionalId}`
+        `${import.meta.env.VITE_API_URL}/ca/clients-count/${professionalId}`,
       );
       setAssignmentCount(response.data);
     } catch (error) {
@@ -98,7 +97,7 @@ const CADashboard = () => {
 
   /* checking which client has status Awaiting_details*/
   const pendingAction = assignments.filter(
-    (assignment) => assignment.assignmentStatus === "AWAITING_DETAILS"
+    (assignment) => assignment.assignmentStatus === "AWAITING_DETAILS",
   );
 
   /* Getting the client which assiged to ca today itself */
@@ -220,8 +219,8 @@ const CADashboard = () => {
                       daysLeft <= 3
                         ? "deadline-red"
                         : daysLeft <= 7
-                        ? "deadline-yellow"
-                        : ""
+                          ? "deadline-yellow"
+                          : ""
                     }`}
                   >
                     {a.serviceType.replace("_", " ")} – {a.name} – {daysLeft}{" "}
@@ -288,7 +287,7 @@ const CADashboard = () => {
                             assignment.assignmentId
                           }&id=${assignment.clientId}&role=${
                             assignment.role
-                          }&name=${encodeURIComponent(assignment.name)}`
+                          }&name=${encodeURIComponent(assignment.name)}`,
                         )
                       }
                       className="
