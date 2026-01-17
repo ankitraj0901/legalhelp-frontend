@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -18,7 +18,7 @@ const LawyerList = () => {
       const clientId = Number(String(userId).trim());
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user/lawyer-list/${clientId}`
+          `${import.meta.env.VITE_API_URL}/user/lawyer-list/${clientId}`,
         );
         console.log(response);
         setLawyers(response.data);
@@ -46,7 +46,7 @@ const LawyerList = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       const data = response.data;
