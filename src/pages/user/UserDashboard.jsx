@@ -33,6 +33,7 @@ const UserDashboard = () => {
 
   const [assignments, setAssignments] = useState([]);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
+  
 
   const [formData, setFormData] = useState({
     title: "",
@@ -60,7 +61,7 @@ const UserDashboard = () => {
       }/assignments/assigned-professional/${userId}`
     );
     setAssignments(res.data);
-    console.log(res);
+    console.log(res.data);
   };
 
   const openForm = (assignment) => {
@@ -75,7 +76,7 @@ const UserDashboard = () => {
         }`,
         formData
       );
-      console.log(response);
+      //console.log(response);
       await fetchAssignments();
       setSelectedAssignment(null);
     } catch (err) {
@@ -116,7 +117,7 @@ const UserDashboard = () => {
       <div className="dashboard-container">
         {/* A. Header */}
         <header className="dashboard-header">
-          <h1>Welcome back! {name}</h1>
+          <h1>Welcome back, {name}</h1>
           <p>Here's what's happening today 👇</p>
         </header>
 
@@ -388,7 +389,7 @@ const UserDashboard = () => {
           <div className="uploaded-files">
             {/* <h3>Uploaded Files</h3> */}
             <ul>
-              {uploadedFiles.map((file, index) => (
+              {user.recentDocs.map((file, index) => (
                 <li key={index}>{file}</li>
               ))}
             </ul>

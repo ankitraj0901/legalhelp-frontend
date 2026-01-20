@@ -1,5 +1,4 @@
-import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import "./Register.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -99,7 +98,7 @@ const RegisterPage = () => {
         // that falls out of the range of 2xx (e.g., 400, 409 Conflict)
         console.error("Registration Error:", error.data);
         alert(
-          `Registration Failed: ${error.data.message || "Check your details."}`
+          `Registration Failed: ${error.data.message || "Check your details."}`,
         );
       } else if (error.request) {
         // The request was made but no response was received (e.g., server down)
@@ -175,8 +174,8 @@ const RegisterPage = () => {
                     role === "CA"
                       ? "CA Registration No."
                       : role === "Lawyer"
-                      ? "Bar Registration No."
-                      : "Consultant ID"
+                        ? "Bar Registration No."
+                        : "Consultant ID"
                   }
                   value={formData.registrationNo}
                   onChange={handleChange}

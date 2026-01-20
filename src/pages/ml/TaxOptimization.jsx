@@ -11,7 +11,7 @@ export default function TaxOptimization() {
     home_loan_interest: "",
     hra_claimed: false,
     has_employer_nps: false,
-    salary: ""
+    salary: "",
   });
 
   const [result, setResult] = useState(null);
@@ -22,7 +22,7 @@ export default function TaxOptimization() {
     const { name, value, type, checked } = e.target;
     setForm({
       ...form,
-      [name]: type === "checkbox" ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -36,7 +36,7 @@ export default function TaxOptimization() {
       const payload = {
         current_tax: Number(form.current_tax),
         regime: form.regime,
-        age: Number(form.age)
+        age: Number(form.age),
       };
 
       if (form.regime === "OLD") {
@@ -50,8 +50,8 @@ export default function TaxOptimization() {
       }
 
       const res = await axios.post(
-        "http://localhost:5000/optimize-tax",
-        payload
+        `${import.meta.env.VITE_ML_URL}/optimize-tax`,
+        payload,
       );
 
       setResult(res.data);
@@ -192,9 +192,7 @@ export default function TaxOptimization() {
         </form>
 
         {/* Result */}
-        {error && (
-          <p className="text-red-600 mt-4 text-sm">{error}</p>
-        )}
+        {error && <p className="text-red-600 mt-4 text-sm">{error}</p>}
 
         {result && (
           <div className="mt-6 bg-green-50 p-4 rounded-lg">

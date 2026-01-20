@@ -31,8 +31,8 @@ export default function TaxPredictor() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/user/dashboard/tax-prediction",
-        formData
+        `${import.meta.env.VITE_ML_URL}/user/dashboard/tax-prediction`,
+        formData,
       );
       setResult(res.data);
     } catch (err) {
@@ -45,13 +45,14 @@ export default function TaxPredictor() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-10">
-        
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
           Income Tax Predictor (New Tax Regime)
         </h1>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           {[
             ["salary", "Annual Salary"],
             ["hra", "HRA"],
@@ -104,7 +105,6 @@ export default function TaxPredictor() {
             </p>
           </div>
         )}
-
       </div>
     </div>
   );

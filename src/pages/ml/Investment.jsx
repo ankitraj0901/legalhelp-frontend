@@ -23,8 +23,8 @@ const Investment = () => {
     try {
       const url =
         strategy === "stock"
-          ? "http://localhost:5000/api/recommend/stocks"
-          : "http://localhost:5000/api/recommend/mutual-funds";
+          ? `${import.meta.env.VITE_ML_URL}/api/recommend/stocks`
+          : `${import.meta.env.VITE_ML_URL}/api/recommend/mutual-funds`;
 
       const res = await axios.post(url, formData);
       setResult(res.data.recommendations);
@@ -38,7 +38,6 @@ const Investment = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
       <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-8">
-        
         {/* Title */}
         <h2 className="text-2xl font-bold text-gray-800 text-center">
           Investment Advisor
@@ -152,7 +151,6 @@ const Investment = () => {
             </ul>
           </div>
         )}
-
       </div>
     </div>
   );

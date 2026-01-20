@@ -13,6 +13,7 @@ const CADashboard = () => {
   const [assignmentCount, setAssignmentCount] = useState(null);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [dueDate, setDueDate] = useState(null);
+  const [selectedCase, setSelectedCase] = useState(null);
 
   const professionalId = localStorage.getItem("userId");
   const name = localStorage.getItem("name");
@@ -24,11 +25,7 @@ const CADashboard = () => {
     completionRate: "92%",
   };
 
-  const clientLeads = [
-    { name: "Rohit Sharma", status: "New" },
-    { name: "Priya Mehta", status: "Urgent" },
-    { name: "Ankit Gupta", status: "Follow-up" },
-  ];
+ 
 
   const pendingActions = [
     { task: "Waiting for Form 16 from Riya", due: "Nov 8" },
@@ -37,11 +34,6 @@ const CADashboard = () => {
     { task: "Bank Statement from Aman", due: "Nov 10" },
   ];
 
-  const deadlines = [
-    { task: "GST Filing - Rakesh", daysLeft: 2 },
-    { task: "ITR Audit - Suman", daysLeft: 6 },
-    { task: "Quarterly Report - Kiran", daysLeft: 10 },
-  ];
 
   /*  fetching clients for professional */
 
@@ -55,7 +47,6 @@ const CADashboard = () => {
         `${import.meta.env.VITE_API_URL}/ca/clients-list/${professionalId}`,
       );
       setAssignments(response.data);
-      console.log("Hello");
       setDueDate(response.data.dueDate);
       console.log(response);
     } catch (error) {
@@ -117,9 +108,25 @@ const CADashboard = () => {
     return "Follow-up";
   };
 
-  // Debug (optional)
-  console.log("Today's Date:", today);
-  console.log("Today Leads:", todayLeads);
+  
+
+  
+
+  // Handling My Cases section
+  const cases = assignments.filter((a) => a.title);
+
+  const handleStatusChange = (id, status) => {
+    console.log(id, status);
+    // call backend API to update assignmentStatus
+  };
+
+  const openDescription = (caseData) => {
+    alert(caseData.description || "No description provided");
+  };
+
+  const askPayment = (assignmentId) => {
+    navigate(`/dashboard/lawyer/payment/${assignmentId}`);
+  };
 
   return (
     <>
@@ -204,7 +211,6 @@ const CADashboard = () => {
           {/* displaying the client deadline on the cards */}
           <div className="queue-section">
             <h2>Upcoming Deadlines</h2>
-
             <ul>
               {assignments.map((a, i) => {
                 const daysLeft = getDaysLeft(a.dueDate);
@@ -314,6 +320,109 @@ const CADashboard = () => {
               ))}
             </tbody>
           </table>
+        </section>
+
+        {/* My Cases Table */}
+        <section className="bg-white rounded-xl shadow-lg p-6 mt-10">
+          <h2 className="text-2xl font-semibold mb-6 text-[#1E40AF]">
+            My Cases
+          </h2>
+
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b bg-gray-50">
+                <th className="py-3 px-2">Client</th>
+                <th className="py-3 px-2">Title</th>
+                <th className="py-3 px-2">Due Date</th>
+                <th className="py-3 px-2 text-center">Status</th>
+                <th className="py-3 px-2 text-center">Description</th>
+                <th className="py-3 px-2 text-center">Payment</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {cases.map((c) => (
+                <tr key={c.assignmentId} className="border-b hover:bg-gray-50">
+                  <td className="py-3 px-2">{c.name}</td>
+
+                  <td className="py-3 px-2 font-medium">{c.title}</td>
+
+                  <td className="py-3 px-2">{c.dueDate || "N/A"}</td>
+
+                  {/* Status Dropdown */}
+                  <td className="py-3 px-2 text-center">
+                    <select
+                      value={c.assignmentStatus}
+                      onChange={(e) =>
+                        handleStatusChange(c.assignmentId, e.target.value)
+                      }
+                      className="border rounded-lg px-3 py-1 text-sm"
+                    >
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="IN_PROGRESS">IN_PROGRESS</option>
+                      <option value="COMPLETED">COMPLETED</option>
+                    </select>
+                  </td>
+
+                  {/* Description Button */}
+                  <td className="py-3 px-2 text-center">
+                    <button
+                      onClick={() => setSelectedCase(c)}
+                      className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-md text-sm"
+                    >
+                      View
+                    </button>
+                  </td>
+
+                  {/* Ask Payment */}
+                  <td className="py-3 px-2 text-center">
+                    <button
+                      onClick={() => askPayment(c.assignmentId)}
+                      className="bg-purple-600 text-white px-4 py-1 rounded-md hover:bg-purple-700"
+                    >
+                      Ask Payment
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {selectedCase && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-transparent">
+              <div className="bg-white rounded-xl shadow-2xl w-[420px] p-6 relative border">
+                <h3 className="text-lg font-semibold text-[#1E40AF] mb-3">
+                  Case Description
+                </h3>
+
+                <p className="text-gray-700 mb-4 leading-relaxed">
+                  {selectedCase.description || "No description provided"}
+                </p>
+
+                <div className="text-sm text-gray-500 mb-4">
+                  <strong>Client:</strong> {selectedCase.name}
+                  <br />
+                  <strong>Title:</strong> {selectedCase.title}
+                </div>
+
+                <button
+                  onClick={() => setSelectedCase(null)}
+                  className="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xl"
+                >
+                  ✕
+                </button>
+
+                <div className="text-right">
+                  <button
+                    onClick={() => setSelectedCase(null)}
+                    className="bg-[#2563EB] text-white px-5 py-2 rounded-lg hover:bg-[#1E40AF]"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
         {/* E. Document Management */}

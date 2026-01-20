@@ -1,4 +1,3 @@
-import "./Login.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,8 +18,9 @@ function Login() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email, password }),
-        }
+        },
       );
+
       const data = await response.json();
       console.log(data);
 
@@ -52,53 +52,58 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <h2 className="brand">LegalHelp</h2>
-        <h4 className="welcome">Welcome back!</h4>
-        <p className="subtitle">Login to continue using LegalHelp</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-indigo-900 to-black px-4">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-8 text-white">
+        {/* Brand */}
+        <h2 className="text-3xl font-bold text-center mb-2">
+          Legal<span className="text-indigo-400">Help</span>
+        </h2>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
+        <h4 className="text-lg text-center font-medium mt-2">Welcome back!</h4>
+        <p className="text-sm text-center text-gray-300 mb-8">
+          Login to continue using LegalHelp
+        </p>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
             <input
               type="email"
-              className="form-control"
               placeholder="Email address"
               required
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
-          <div className="form-group">
+          <div>
             <input
               type="password"
-              className="form-control"
               placeholder="Password"
               required
               onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
-          <button type="submit" className="btn-login">
+          <button
+            type="submit"
+            className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition font-semibold text-white shadow-lg"
+          >
             Log in
           </button>
-
-          <p className="register-link">
-            Don’t have an account? <a href="/register">Sign up</a>
-          </p>
         </form>
 
-        {/*  */}
-
-        {/* <div className="social-buttons">
-          <button className="google-btn">
-            <img
-              src="https://www.svgrepo.com/show/475656/google-color.svg"
-              alt="Google"
-            />
-            Continue with Google
-          </button>
-        </div> */}
+        {/* Register */}
+        <p className="text-sm text-center text-gray-300 mt-6">
+          Don’t have an account?{" "}
+          <a
+            href="/register"
+            className="text-indigo-400 hover:underline font-medium"
+          >
+            Sign up
+          </a>
+        </p>
       </div>
     </div>
   );
