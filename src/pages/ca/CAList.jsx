@@ -45,7 +45,7 @@ const CAList = () => {
     fetchCAs();
   }, []);
 
-  // handle function to establish connection between CA and user
+  // Handle Connect CA
   const handleConnect = async (ca) => {
     // setSelectedCA(ca);
     try {
