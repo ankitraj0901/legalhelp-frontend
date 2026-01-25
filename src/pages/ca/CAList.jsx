@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
-import "./CAList.css";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,10 +13,9 @@ const CAList = () => {
 
   const navigate = useNavigate();
 
-  //Extracting
   const userId = localStorage.getItem("userId");
 
-  //fetch the CA from backend api
+  /* ---------------- Fetch CA List ---------------- */
   useEffect(() => {
     const fetchCAs = async () => {
       const clientId = Number(String(userId).trim());
@@ -30,24 +28,23 @@ const CAList = () => {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
               "Content-Type": "application/json",
             },
-          },
+          }
         );
 
         const data = await response.json();
-        console.log(data);
         setCaList(data);
       } catch (error) {
-        setError("Failed to Load CA list", error);
+        setError("Failed to Load CA list");
       } finally {
         setLoading(false);
       }
     };
+
     fetchCAs();
   }, []);
 
-  // Handle Connect CA
+  /* ---------------- Handle Connect ---------------- */
   const handleConnect = async (ca) => {
-    // setSelectedCA(ca);
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/assignments/assign-ca`,
@@ -59,7 +56,7 @@ const CAList = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        },
+        }
       );
 
       const data = response.data;
@@ -69,6 +66,7 @@ const CAList = () => {
       } else {
         toast.success("Lawyer connected successfully!");
       }
+
       navigate("/user/dashboard");
     } catch (error) {
       console.error(error);
@@ -76,44 +74,64 @@ const CAList = () => {
     }
   };
 
+  /* ---------------- UI ---------------- */
   return (
     <>
-      <Header></Header>
-      <section className="ca-list-section">
-        <div className="ca-list-header">
-          <h2>Find Your Chartered Accountant</h2>
-          <p>
+      <Header />
+
+      <section className="bg-slate-50 font-[Inter] text-gray-800 min-h-screen">
+        {/* Header */}
+        <div className="text-center px-6 py-12">
+          <h2 className="text-3xl font-semibold text-slate-800 mb-2">
+            Find Your Chartered Accountant
+          </h2>
+          <p className="text-gray-500 max-w-2xl mx-auto">
             Connect with verified professionals for tax advice, audits, and
             financial planning. Simplify your accounting needs today.
           </p>
         </div>
 
-        {/* Extracting details of Ca from the Returned List */}
-        {loading && <p className="loading">Loading CA list...</p>}
-        {error && <p className="error">{error}</p>}
+        {/* Loading / Error */}
+        {loading && (
+          <p className="text-center text-gray-500">Loading CA list...</p>
+        )}
+        {error && (
+          <p className="text-center text-red-500 font-medium">{error}</p>
+        )}
 
-        <div className="ca-card-container">
+        {/* CA Cards */}
+        <div className="px-6 pb-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {!loading &&
             !error &&
             caList &&
             caList.map((ca) => (
-              <div className="ca-card" key={ca.id}>
-                <div className="ca-card-header">
+              <div
+                key={ca.id}
+                className="bg-white rounded-xl p-6 shadow-md transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
+              >
+                {/* Card Header */}
+                <div className="flex items-center mb-4">
                   <img
                     src={
                       ca.image ||
                       "https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
                     }
                     alt={ca.name}
-                    className="ca-avatar"
+                    className="w-15 h-15 w-[60px] h-[60px] rounded-full object-cover mr-4"
                   />
-                  <div className="ca-info-header">
-                    <h3>{ca.name}</h3>
-                    <span className="ca-rating">⭐ {4.5} / 5</span>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-800">
+                      {ca.name}
+                    </h3>
+                    <span className="text-amber-500 font-medium text-sm">
+                      ⭐ 4.5 / 5
+                    </span>
                   </div>
                 </div>
 
-                <div className="ca-info">
+                {/* CA Info */}
+                <div className="text-sm text-slate-600 space-y-1">
                   <p>
                     <strong>Email:</strong> {ca.email}
                   </p>
@@ -123,23 +141,20 @@ const CAList = () => {
                   <p>
                     <strong>Specialization:</strong> {ca.specialization}
                   </p>
-                  {/* <p>
-                <strong>Clients Served:</strong> {ca.clients}+ 
-              </p> */}
                 </div>
 
-                {/* <button className="connect-btn" onClick={() => handleConnect(ca)}>
-                Connect Now
-              </button> */}
-
+                {/* Action Button */}
                 {ca.assigned ? (
-                  <button className="connected-btn" disabled>
+                  <button
+                    disabled
+                    className="mt-5 w-full bg-gray-300 text-gray-600 font-medium py-2 rounded-lg cursor-not-allowed"
+                  >
                     Connected
                   </button>
                 ) : (
                   <button
-                    className="connect-btn"
                     onClick={() => handleConnect(ca)}
+                    className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors"
                   >
                     Connect
                   </button>
@@ -148,17 +163,21 @@ const CAList = () => {
             ))}
         </div>
 
+        {/* Popup */}
         {selectedCA && (
-          <div className="ca-popup">
-            <div className="popup-content">
-              <h4>Request Sent Successfully</h4>
-              <p>
-                Your request has been sent to <strong>{selectedCA.name}</strong>
-                . They will reach out to you shortly.
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl p-8 max-w-sm text-center shadow-xl">
+              <h4 className="text-lg font-semibold mb-2">
+                Request Sent Successfully
+              </h4>
+              <p className="text-gray-600">
+                Your request has been sent to{" "}
+                <strong>{selectedCA.name}</strong>. They will reach out to you
+                shortly.
               </p>
               <button
-                className="close-popup"
                 onClick={() => setSelectedCA(null)}
+                className="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2 rounded-md transition-colors"
               >
                 Close
               </button>

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import "./CADashboard.css";
+import { useEffect, useState, useMemo } from "react";
 import Header from "../../components/Header";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -8,427 +7,314 @@ import "@talkjs/react-components/default.css";
 
 const CADashboard = () => {
   const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [assignments, setAssignments] = useState([]);
   const [assignmentCount, setAssignmentCount] = useState(null);
-  const [selectedAssignment, setSelectedAssignment] = useState(null);
-  const [dueDate, setDueDate] = useState(null);
   const [selectedCase, setSelectedCase] = useState(null);
 
   const professionalId = localStorage.getItem("userId");
   const name = localStorage.getItem("name");
 
-  // Sample Data
   const kpis = {
     revenue: "₹1,20,000",
-    clients: 34,
     completionRate: "92%",
   };
 
- 
-
-  const pendingActions = [
-    { task: "Waiting for Form 16 from Riya", due: "Nov 8" },
-    { task: "Bank Statement from Aman", due: "Nov 10" },
-    { task: "Bank Statement from Aman", due: "Nov 10" },
-    { task: "Bank Statement from Aman", due: "Nov 10" },
-  ];
-
-
-  /*  fetching clients for professional */
+  /* ---------------- API Calls ---------------- */
 
   useEffect(() => {
     fetchClients();
+    fetchClientCount();
   }, []);
 
   const fetchClients = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/ca/clients-list/${professionalId}`,
+        `${import.meta.env.VITE_API_URL}/ca/clients-list/${professionalId}`
       );
       setAssignments(response.data);
-      setDueDate(response.data.dueDate);
-      console.log(response);
     } catch (error) {
-      toast.error("Error with api", error);
+      toast.error("Error while fetching clients");
+      console.error(error);
     }
   };
-
-  /* filtering clien show in the professional dashboard*/
-  const filteredClients = assignments.filter((assignment) =>
-    assignment.name?.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  /* COUNT Number of clients to the current professional */
-  useEffect(() => {
-    fetchClientCount();
-  }, []);
 
   const fetchClientCount = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/ca/clients-count/${professionalId}`,
+        `${import.meta.env.VITE_API_URL}/ca/clients-count/${professionalId}`
       );
       setAssignmentCount(response.data);
     } catch (error) {
-      toast.error("Error in api", error);
+      toast.error("Error while fetching client count");
     }
   };
 
-  /*Implemneting client deadline on the ca dashboard */
-  const getDaysLeft = (dueDate) => {
-    const today = new Date();
-    const due = new Date(dueDate);
+  /* ---------------- Helpers ---------------- */
 
-    today.setHours(0, 0, 0, 0);
-    due.setHours(0, 0, 0, 0);
+  const filteredClients = useMemo(() => {
+    return assignments.filter((a) =>
+      a.name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [assignments, searchTerm]);
 
-    return Math.ceil((due - today) / (1000 * 60 * 60 * 24));
-  };
+  const handleStatusChange = async (assignmentId, status) => {
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/ca/update-status`,
+        { assignmentId, status }
+      );
 
-  /* checking which client has status Awaiting_details*/
-  const pendingAction = assignments.filter(
-    (assignment) => assignment.assignmentStatus === "AWAITING_DETAILS",
-  );
+      setAssignments((prev) =>
+        prev.map((a) =>
+          a.assignmentId === assignmentId
+            ? { ...a, assignmentStatus: status }
+            : a
+        )
+      );
 
-  /* Getting the client which assiged to ca today itself */
-
-  const today = new Date().toISOString().split("T")[0];
-
-  // 2️ Filter assignments assigned today
-  const todayLeads = assignments.filter((assignment) => {
-    return assignment.assignmentDate === today;
-  });
-
-  // 3️ Optional: Decide lead label (New / Follow-up / Urgent)
-  const getLeadStatus = (assignment) => {
-    if (assignment.assignmentStatus === "AWAITING_DETAILS") {
-      return "New";
+      toast.success("Status updated");
+    } catch (error) {
+      toast.error("Failed to update status");
     }
-    return "Follow-up";
-  };
-
-  
-
-  
-
-  // Handling My Cases section
-  const cases = assignments.filter((a) => a.title);
-
-  const handleStatusChange = (id, status) => {
-    console.log(id, status);
-    // call backend API to update assignmentStatus
-  };
-
-  const openDescription = (caseData) => {
-    alert(caseData.description || "No description provided");
   };
 
   const askPayment = (assignmentId) => {
     navigate(`/dashboard/lawyer/payment/${assignmentId}`);
   };
 
+  const cases = assignments.filter((a) => a.title);
+
+  /* ---------------- UI ---------------- */
+
   return (
     <>
-      <Header></Header>
-      <div className="ca-dashboard">
-        <header className="ca-header">
-          <h1>Welcome, CA {name}</h1>
-          {/* <h2></h2> */}
-          <p>Welcome back! Here’s an overview of your current performance.</p>
+      <Header />
+
+      <div className="font-[Poppins] bg-slate-50 px-6 md:px-14 py-10 text-gray-900">
+        {/* Header */}
+        <header className="mb-8">
+          <h1 className="text-4xl font-bold">Welcome, CA {name}</h1>
+          <p className="text-gray-600 mt-1">
+            Welcome back! Here’s an overview of your current performance.
+          </p>
         </header>
 
-        {/* A. KPIs */}
-        <section className="kpi-section">
-          <div className="kpi-card">
-            <h3>Total Revenue</h3>
-            <p className="kpi-value">{kpis.revenue}</p>
-            <small>for this month</small>
-          </div>
-          <div className="kpi-card">
-            <h3>Active Clients</h3>
-            <p className="kpi-value">{assignmentCount}</p>
-          </div>
-          <div className="kpi-card">
-            <h3>Completion Rate</h3>
-            <p className="kpi-value">{kpis.completionRate}</p>
-          </div>
-        </section>
-
-        {/* B. Action Queue */}
-        <section className="action-queue">
-          <div className="queue-section">
-            <h2>New Client Leads</h2>
-
-            {todayLeads.length === 0 ? (
-              <p className="empty-text">No new client leads today</p>
-            ) : (
-              <ul>
-                {todayLeads.map((lead, i) => (
-                  <li key={i}>
-                    {lead.name}{" "}
-                    <span className="status-tag tag-blue">
-                      {getLeadStatus(lead)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
+        {/* KPI Section */}
+        <section className="flex flex-wrap gap-5 my-10">
+          <div className="flex-1 bg-white p-6 rounded-xl text-center shadow-md">
+            <h3 className="text-gray-600 mb-2">Total Revenue</h3>
+            <p className="text-3xl font-bold text-blue-600">
+              {kpis.revenue}
+            </p>
+            <small className="text-gray-500">for this month</small>
           </div>
 
-          {/* Pending Action from client */}
-
-          {/* <div className="queue-section">
-            <h2>Pending Client Actions</h2>
-            <ul>
-              {pendingActions.map((a, i) => (
-                <li key={i}>
-                  {a.task} <span className="due-date">Due: {a.due}</span>
-                </li>
-              ))}
-            </ul>
-          </div> */}
-
-          <div className="queue-section">
-            <h2>Pending Client Actions</h2>
-
-            {pendingActions.length === 0 ? (
-              <p>No pending client actions</p>
-            ) : (
-              <ul>
-                {pendingAction.map((a, i) => (
-                  <li key={i}>
-                    {a.assignmentStatus} from {a.name}
-                    {/* <span className="due-date">
-            Due: {new Date(a.dueDate).toLocaleDateString()}
-          </span> */}
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className="flex-1 bg-white p-6 rounded-xl text-center shadow-md">
+            <h3 className="text-gray-600 mb-2">Active Clients</h3>
+            <p className="text-3xl font-bold text-blue-600">
+              {assignmentCount}
+            </p>
           </div>
 
-          {/* displaying the client deadline on the cards */}
-          <div className="queue-section">
-            <h2>Upcoming Deadlines</h2>
-            <ul>
-              {assignments.map((a, i) => {
-                const daysLeft = getDaysLeft(a.dueDate);
-
-                // show only 1–20 days
-                if (daysLeft < 1 || daysLeft > 20) return null;
-
-                return (
-                  <li
-                    key={a.assignmentId || i}
-                    className={`${
-                      daysLeft <= 3
-                        ? "deadline-red"
-                        : daysLeft <= 7
-                          ? "deadline-yellow"
-                          : ""
-                    }`}
-                  >
-                    {a.serviceType.replace("_", " ")} – {a.name} – {daysLeft}{" "}
-                    days left
-                  </li>
-                );
-              })}
-            </ul>
+          <div className="flex-1 bg-white p-6 rounded-xl text-center shadow-md">
+            <h3 className="text-gray-600 mb-2">Completion Rate</h3>
+            <p className="text-3xl font-bold text-blue-600">
+              {kpis.completionRate}
+            </p>
           </div>
         </section>
 
-        {/* C. Communication */}
-        <section className="communication-section">
-          <div className="chat-box">
-            <h2>Client Chat</h2>
-            <div className="chat-window">
-              <p>
-                <strong>Riya:</strong> Sent bank statement
-              </p>
-              <p>
-                <strong>You:</strong> Received, reviewing it now.
-              </p>
-            </div>
-            <input type="text" placeholder="Type a message..." />
-          </div>
+        {/* Client Database */}
+        <section className="bg-white rounded-xl p-6 mb-10 shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">My Clients</h2>
 
-          <div className="notes-box">
-            <h2>Internal Notes</h2>
-            <textarea placeholder="Write notes about a client..."></textarea>
-          </div>
-        </section>
-
-        {/* D. Client Database */}
-        <section className="client-database">
-          <h2>My Clients</h2>
           <input
             type="text"
             placeholder="Search clients..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full mb-4 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
           />
-          <table>
-            <thead>
-              <tr>
-                <th>Client Name</th>
-                <th>Service Type</th>
-                <th>Status</th>
-                <th>Message</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredClients.map((assignment, c) => (
-                <tr key={assignment.assignmentId}>
-                  <td>{assignment.name}</td>
-                  <td>{assignment.serviceType}</td>
-                  <td>{assignment.assignmentStatus}</td>
-                  <td>
-                    {/* Chat button  */}
-                    <button
-                      onClick={() =>
-                        navigate(
-                          `/dashboard/ca/chat?conv_id=${
-                            assignment.assignmentId
-                          }&id=${assignment.clientId}&role=${
-                            assignment.role
-                          }&name=${encodeURIComponent(assignment.name)}`,
-                        )
-                      }
-                      className="
-      inline-flex items-center gap-2
-      bg-green-500 hover:bg-green-600
-      text-white font-medium
-      px-4 py-2
-      rounded-md
-      transition-colors
-    "
-                    >
-                      Chat
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="view-btn"
-                      onClick={() => navigate(`/client/${c.id}`)}
-                    >
-                      View Profile
-                    </button>
-                  </td>
+
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b bg-gray-50">
+                  <th className="p-3 text-left">Client Name</th>
+                  <th className="p-3 text-left">Service Type</th>
+                  <th className="p-3 text-left">Status</th>
+                  <th className="p-3 text-left">Message</th>
+                  <th className="p-3 text-left">Action</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {filteredClients.map((assignment) => (
+                  <tr
+                    key={assignment.assignmentId}
+                    className="border-b hover:bg-gray-50"
+                  >
+                    <td className="p-3">{assignment.name}</td>
+                    <td className="p-3">{assignment.serviceType}</td>
+
+                    <td className="p-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm text-white ${
+                          assignment.assignmentStatus === "ACTIVE"
+                            ? "bg-blue-600"
+                            : assignment.assignmentStatus ===
+                              "AWAITING_DETAILS"
+                            ? "bg-yellow-400 text-black"
+                            : "bg-red-500"
+                        }`}
+                      >
+                        {assignment.assignmentStatus}
+                      </span>
+                    </td>
+
+                    <td className="p-3">
+                      <button
+                        onClick={() =>
+                          navigate(
+                            `/dashboard/ca/chat?conv_id=${assignment.assignmentId}&id=${assignment.clientId}&role=${assignment.role}&name=${encodeURIComponent(
+                              assignment.name
+                            )}`
+                          )
+                        }
+                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                      >
+                        Chat
+                      </button>
+                    </td>
+
+                    <td className="p-3">
+                      <button
+                        onClick={() =>
+                          navigate(`/client/${assignment.clientId}`)
+                        }
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                      >
+                        View Profile
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
 
-        {/* My Cases Table */}
+        {/* My Cases */}
         <section className="bg-white rounded-xl shadow-lg p-6 mt-10">
-          <h2 className="text-2xl font-semibold mb-6 text-[#1E40AF]">
+          <h2 className="text-2xl font-semibold mb-6 text-blue-800">
             My Cases
           </h2>
 
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b bg-gray-50">
-                <th className="py-3 px-2">Client</th>
-                <th className="py-3 px-2">Title</th>
-                <th className="py-3 px-2">Due Date</th>
-                <th className="py-3 px-2 text-center">Status</th>
-                <th className="py-3 px-2 text-center">Description</th>
-                <th className="py-3 px-2 text-center">Payment</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {cases.map((c) => (
-                <tr key={c.assignmentId} className="border-b hover:bg-gray-50">
-                  <td className="py-3 px-2">{c.name}</td>
-
-                  <td className="py-3 px-2 font-medium">{c.title}</td>
-
-                  <td className="py-3 px-2">{c.dueDate || "N/A"}</td>
-
-                  {/* Status Dropdown */}
-                  <td className="py-3 px-2 text-center">
-                    <select
-                      value={c.assignmentStatus}
-                      onChange={(e) =>
-                        handleStatusChange(c.assignmentId, e.target.value)
-                      }
-                      className="border rounded-lg px-3 py-1 text-sm"
-                    >
-                      <option value="ACTIVE">ACTIVE</option>
-                      <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="COMPLETED">COMPLETED</option>
-                    </select>
-                  </td>
-
-                  {/* Description Button */}
-                  <td className="py-3 px-2 text-center">
-                    <button
-                      onClick={() => setSelectedCase(c)}
-                      className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-md text-sm"
-                    >
-                      View
-                    </button>
-                  </td>
-
-                  {/* Ask Payment */}
-                  <td className="py-3 px-2 text-center">
-                    <button
-                      onClick={() => askPayment(c.assignmentId)}
-                      className="bg-purple-600 text-white px-4 py-1 rounded-md hover:bg-purple-700"
-                    >
-                      Ask Payment
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b bg-gray-50">
+                  <th className="p-3 text-left">Client</th>
+                  <th className="p-3 text-left">Title</th>
+                  <th className="p-3 text-left">Due Date</th>
+                  <th className="p-3 text-center">Status</th>
+                  <th className="p-3 text-center">Description</th>
+                  <th className="p-3 text-center">Payment</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
 
-          {selectedCase && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-transparent">
-              <div className="bg-white rounded-xl shadow-2xl w-[420px] p-6 relative border">
-                <h3 className="text-lg font-semibold text-[#1E40AF] mb-3">
-                  Case Description
-                </h3>
-
-                <p className="text-gray-700 mb-4 leading-relaxed">
-                  {selectedCase.description || "No description provided"}
-                </p>
-
-                <div className="text-sm text-gray-500 mb-4">
-                  <strong>Client:</strong> {selectedCase.name}
-                  <br />
-                  <strong>Title:</strong> {selectedCase.title}
-                </div>
-
-                <button
-                  onClick={() => setSelectedCase(null)}
-                  className="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xl"
-                >
-                  ✕
-                </button>
-
-                <div className="text-right">
-                  <button
-                    onClick={() => setSelectedCase(null)}
-                    className="bg-[#2563EB] text-white px-5 py-2 rounded-lg hover:bg-[#1E40AF]"
+              <tbody>
+                {cases.map((c) => (
+                  <tr
+                    key={c.assignmentId}
+                    className="border-b hover:bg-gray-50"
                   >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+                    <td className="p-3">{c.name}</td>
+                    <td className="p-3 font-medium">{c.title}</td>
+                    <td className="p-3">{c.dueDate || "N/A"}</td>
+
+                    <td className="p-3 text-center">
+                      <select
+                        value={c.assignmentStatus}
+                        onChange={(e) =>
+                          handleStatusChange(
+                            c.assignmentId,
+                            e.target.value
+                          )
+                        }
+                        className="border rounded-lg px-3 py-1"
+                      >
+                        <option value="ACTIVE">ACTIVE</option>
+                        <option value="IN_PROGRESS">IN_PROGRESS</option>
+                        <option value="COMPLETED">COMPLETED</option>
+                      </select>
+                    </td>
+
+                    <td className="p-3 text-center">
+                      <button
+                        onClick={() => setSelectedCase(c)}
+                        className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-md"
+                      >
+                        View
+                      </button>
+                    </td>
+
+                    <td className="p-3 text-center">
+                      <button
+                        onClick={() => askPayment(c.assignmentId)}
+                        className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded-md"
+                      >
+                        Ask Payment
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
 
-        {/* E. Document Management */}
-        <section className="docs-section">
-          <h2>Document Management</h2>
-          <button className="docs-btn">View Client Documents</button>
+        {/* Case Modal */}
+        {selectedCase && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+            <div className="bg-white rounded-xl shadow-2xl w-[420px] p-6 relative">
+              <h3 className="text-lg font-semibold text-blue-800 mb-3">
+                Case Description
+              </h3>
+
+              <p className="text-gray-700 mb-4">
+                {selectedCase.description || "No description provided"}
+              </p>
+
+              <button
+                onClick={() => setSelectedCase(null)}
+                className="absolute top-3 right-3 text-gray-400 hover:text-red-500"
+              >
+                ✕
+              </button>
+
+              <div className="text-right">
+                <button
+                  onClick={() => setSelectedCase(null)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Document Management */}
+        <section className="text-center bg-white p-6 rounded-xl shadow-md mt-10">
+          <h2 className="text-xl font-semibold mb-4">
+            Document Management
+          </h2>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">
+            View Client Documents
+          </button>
         </section>
       </div>
     </>
