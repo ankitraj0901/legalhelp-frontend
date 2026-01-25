@@ -102,3 +102,6 @@ function Login() {
 }
 
 export default Login;
+
+// End of Login.jsx
+// The above code defines a Login component with a stylish and responsive login form.
