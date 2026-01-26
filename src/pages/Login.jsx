@@ -16,7 +16,7 @@ function Login() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -29,8 +29,7 @@ function Login() {
       if (data.role === "CA") navigate("/dashboard/ca");
       else if (data.role === "USER") navigate("/user/dashboard");
       else if (data.role === "LAWYER") navigate("/lawyer/dashboard");
-      else if (data.role === "CONSULTANT")
-        navigate("/dashboard/consultant");
+      else if (data.role === "CONSULTANT") navigate("/dashboard/consultant");
     } catch (err) {
       alert("Something went wrong");
     }
@@ -38,7 +37,6 @@ function Login() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#eef2ff] via-[#fdf2f8] to-[#ecfeff] flex items-center justify-center px-4">
-      
       {/* Decorative blurred shapes */}
       <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-indigo-300/40 rounded-full blur-[120px]" />
       <div className="absolute top-1/3 -right-40 w-[500px] h-[500px] bg-pink-300/40 rounded-full blur-[120px]" />
@@ -49,8 +47,8 @@ function Login() {
         {/* Logo */}
         <div className="flex justify-center mb-4">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">
-  Legal<span className="text-indigo-600">Help</span>
-</h2>
+            Legal<span className="text-indigo-600">Help</span>
+          </h2>
         </div>
 
         <h2 className="text-2xl font-semibold text-center text-gray-900">
@@ -102,5 +100,3 @@ function Login() {
 }
 
 export default Login;
-
-// End of Login.jsx
