@@ -102,9 +102,25 @@ export default function LawyerDashboard() {
   // Handling My Cases section Logic
   const cases = assignments.filter((a) => a.title);
 
-  const handleStatusChange = (id, status) => {
-    console.log(id, status);
-    // call backend API to update assignmentStatus
+  const handleStatusChange = async (assignmentId, status) => {
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/ca/update-status`,
+        { assignmentId, status }
+      );
+
+      setAssignments((prev) =>
+        prev.map((a) =>
+          a.assignmentId === assignmentId
+            ? { ...a, assignmentStatus: status }
+            : a
+        )
+      );
+
+      toast.success("Status updated");
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
   };
 
   const openDescription = (caseData) => {
