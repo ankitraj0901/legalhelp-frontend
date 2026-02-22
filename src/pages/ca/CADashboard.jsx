@@ -248,6 +248,7 @@ const CADashboard = () => {
             </table>
           </div>
         </section>
+        //This section is for document request modal, which appears when CA clicks on "Request Doc" button for a client. It allows CA to select a document type and send a request to the client to upload that document.
         {docRequest.assignmentId && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
             <div className="bg-white p-6 rounded-xl w-[380px] shadow-xl">
