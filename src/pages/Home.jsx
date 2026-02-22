@@ -249,7 +249,7 @@ const HomePage = () => {
               compliance.
             </p>
             <p className="copyright">
-              &copy; 2025 LegalHelp. All rights reserved.
+              &copy; 2026 LegalHelp. All rights reserved.
             </p>
           </div>
 
@@ -302,7 +302,7 @@ const HomePage = () => {
             <h4>Contact & Support</h4>
             <p>
               Email:{" "}
-              <a href="mailto:support@legalhelp.in">support@legalhelp.in</a>
+              <a href="mailto:support@legalhelp.in">support@legalhelp.dev</a>
             </p>
             <p>Phone: +91 98765 43210</p>
           </div>

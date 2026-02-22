@@ -11,6 +11,7 @@ import ConsultantDashboard from "@/pages/consultant/Consultant";
 import LawyerList from "@/pages/lawyer/lawyerList";
 import ConsultantList from "@/pages/consultant/consultantList";
 import TaxPrediction from "@/pages/ml/TaxPrediction";
+import TaxOptimization from "@/pages/ml/TaxOptimization";
 import { ToastContainer } from "react-toastify";
 import Investment from "@/pages/ml/Investment";
 import ChatPage from "@/pages/chat/chat";
@@ -110,6 +111,15 @@ function App() {
           element={
             <RequireAuth allowedRoles={["USER"]}>
               <TaxPrediction/>
+            </RequireAuth>
+          }
+        />
+
+        <Route 
+          path="/user/dashboard/tax-optimizer" 
+          element={
+            <RequireAuth allowedRoles={["USER"]}>
+              <TaxOptimization/>
             </RequireAuth>
           }
         />

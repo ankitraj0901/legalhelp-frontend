@@ -13,6 +13,16 @@ const CADashboard = () => {
   const [assignmentCount, setAssignmentCount] = useState(null);
   const [selectedCase, setSelectedCase] = useState(null);
 
+  // ===== ADD BELOW EXISTING useState =====
+  const [uploadedDocs, setUploadedDocs] = useState([]);
+  const [showDocsModal, setShowDocsModal] = useState(false);
+  const [documents, setDocuments] = useState([]);
+
+  const [docRequest, setDocRequest] = useState({
+    assignmentId: null,
+    documentType: "",
+  });
+
   const professionalId = localStorage.getItem("userId");
   const name = localStorage.getItem("name");
 
@@ -31,7 +41,7 @@ const CADashboard = () => {
   const fetchClients = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/ca/clients-list/${professionalId}`
+        `${import.meta.env.VITE_API_URL}/ca/clients-list/${professionalId}`,
       );
       setAssignments(response.data);
     } catch (error) {
@@ -43,7 +53,7 @@ const CADashboard = () => {
   const fetchClientCount = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/ca/clients-count/${professionalId}`
+        `${import.meta.env.VITE_API_URL}/ca/clients-count/${professionalId}`,
       );
       setAssignmentCount(response.data);
     } catch (error) {
@@ -55,23 +65,23 @@ const CADashboard = () => {
 
   const filteredClients = useMemo(() => {
     return assignments.filter((a) =>
-      a.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      a.name?.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [assignments, searchTerm]);
 
   const handleStatusChange = async (assignmentId, status) => {
     try {
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/ca/update-status`,
-        { assignmentId, status }
-      );
+      await axios.put(`${import.meta.env.VITE_API_URL}/ca/update-status`, {
+        assignmentId,
+        status,
+      });
 
       setAssignments((prev) =>
         prev.map((a) =>
           a.assignmentId === assignmentId
             ? { ...a, assignmentStatus: status }
-            : a
-        )
+            : a,
+        ),
       );
 
       toast.success("Status updated");
@@ -85,6 +95,29 @@ const CADashboard = () => {
   };
 
   const cases = assignments.filter((a) => a.title);
+
+  // ===== ADD: Fetch uploaded documents for an assignment =====
+  useEffect(() => {
+    fetchClients();
+    fetchClientCount();
+    fetchUploadedDocuments();
+  }, []);
+
+  const fetchUploadedDocuments = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/documents/ca/${professionalId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      );
+      setDocuments(res.data);
+    } catch (e) {
+      toast.error("Failed to load documents");
+    }
+  };
 
   /* ---------------- UI ---------------- */
 
@@ -105,9 +138,7 @@ const CADashboard = () => {
         <section className="flex flex-wrap gap-5 my-10">
           <div className="flex-1 bg-white p-6 rounded-xl text-center shadow-md">
             <h3 className="text-gray-600 mb-2">Total Revenue</h3>
-            <p className="text-3xl font-bold text-blue-600">
-              {kpis.revenue}
-            </p>
+            <p className="text-3xl font-bold text-blue-600">{kpis.revenue}</p>
             <small className="text-gray-500">for this month</small>
           </div>
 
@@ -164,10 +195,9 @@ const CADashboard = () => {
                         className={`px-3 py-1 rounded-full text-sm text-white ${
                           assignment.assignmentStatus === "ACTIVE"
                             ? "bg-blue-600"
-                            : assignment.assignmentStatus ===
-                              "AWAITING_DETAILS"
-                            ? "bg-yellow-400 text-black"
-                            : "bg-red-500"
+                            : assignment.assignmentStatus === "AWAITING_DETAILS"
+                              ? "bg-yellow-400 text-black"
+                              : "bg-red-500"
                         }`}
                       >
                         {assignment.assignmentStatus}
@@ -179,8 +209,8 @@ const CADashboard = () => {
                         onClick={() =>
                           navigate(
                             `/dashboard/ca/chat?conv_id=${assignment.assignmentId}&id=${assignment.clientId}&role=${assignment.role}&name=${encodeURIComponent(
-                              assignment.name
-                            )}`
+                              assignment.name,
+                            )}`,
                           )
                         }
                         className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
@@ -198,6 +228,19 @@ const CADashboard = () => {
                       >
                         View Profile
                       </button>
+
+                      <button
+                        onClick={() =>
+                          setDocRequest({
+                            assignmentId: assignment.assignmentId,
+                            documentType: "",
+                            requestedBy: professionalId,
+                          })
+                        }
+                        className="ml-2 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md"
+                      >
+                        Request Doc
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -205,6 +248,53 @@ const CADashboard = () => {
             </table>
           </div>
         </section>
+        {docRequest.assignmentId && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+            <div className="bg-white p-6 rounded-xl w-[380px] shadow-xl">
+              <h3 className="text-lg font-semibold mb-4">Request Document</h3>
+
+              <select
+                className="w-full border p-2 rounded-lg mb-4"
+                value={docRequest.documentType}
+                onChange={(e) =>
+                  setDocRequest({
+                    ...docRequest,
+                    documentType: e.target.value,
+                  })
+                }
+              >
+                <option value="">Select Document</option>
+                <option value="FORM_16">Form 16</option>
+                <option value="AADHAAR">Aadhaar Card</option>
+                <option value="PAN">PAN Card</option>
+                <option value="BANK_STATEMENT">Bank Statement</option>
+              </select>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setDocRequest({ assignmentId: null })}
+                  className="px-4 py-2 bg-gray-300 rounded-lg"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={async () => {
+                    await axios.post(
+                      `${import.meta.env.VITE_API_URL}/documents/request`,
+                      docRequest,
+                    );
+                    toast.success("Document requested");
+                    setDocRequest({ assignmentId: null });
+                  }}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+                >
+                  Request
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* My Cases */}
         <section className="bg-white rounded-xl shadow-lg p-6 mt-10">
@@ -239,10 +329,7 @@ const CADashboard = () => {
                       <select
                         value={c.assignmentStatus}
                         onChange={(e) =>
-                          handleStatusChange(
-                            c.assignmentId,
-                            e.target.value
-                          )
+                          handleStatusChange(c.assignmentId, e.target.value)
                         }
                         className="border rounded-lg px-3 py-1"
                       >
@@ -308,15 +395,109 @@ const CADashboard = () => {
         )}
 
         {/* Document Management */}
-        <section className="text-center bg-white p-6 rounded-xl shadow-md mt-10">
-          <h2 className="text-xl font-semibold mb-4">
-            Document Management
-          </h2>
+        {/* <section className="text-center bg-white p-6 rounded-xl shadow-md mt-10">
+          <h2 className="text-xl font-semibold mb-4">Document Management</h2>
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">
             View Client Documents
           </button>
-        </section>
+        </section> */}
       </div>
+
+      {/* ================= Client Uploaded Documents ================= */}
+      {/* <section className="bg-white rounded-xl shadow-lg p-6 mt-10">
+        <h2 className="text-2xl font-semibold mb-6 text-blue-800 ">
+          Client Uploaded Documents
+        </h2>
+
+        {documents.length === 0 ? (
+          <p className="text-gray-500 text-center">
+            No documents uploaded by clients yet
+          </p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b bg-gray-50">
+                  <th className="p-3 text-left">Client</th>
+                  <th className="p-3 text-left">Case</th>
+                  <th className="p-3 text-left">Document Type</th>
+                  <th className="p-3 text-left">Uploaded On</th>
+                  <th className="p-3 text-center">Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {documents.map((doc) => (
+                  <tr
+                    key={doc.documentId}
+                    className="border-b hover:bg-gray-50"
+                  >
+                    <td className="p-3">{doc.clientName}</td>
+                    <td className="p-3">{doc.caseTitle}</td>
+                    <td className="p-3 font-medium">
+                      {doc.documentType.replace("_", " ")}
+                    </td>
+                    <td className="p-3">
+                      {new Date(doc.uploadedAt).toLocaleDateString()}
+                    </td>
+                    <td className="p-3 text-center">
+                      <a
+                        href={doc.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md"
+                      >
+                        View
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+      */}
+
+      <section className="mt-10 flex justify-center">
+        <div className="bg-white w-full max-w-4xl rounded-xl shadow-md p-6 text-center">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-4">
+            Client Uploaded Documents
+          </h2>
+
+          {documents.length === 0 ? (
+            <p className="text-gray-500">
+              No documents uploaded by clients yet
+            </p>
+          ) : (
+            <div className="space-y-4">
+              {documents.map((doc) => (
+                <div
+                  key={doc.documentId}
+                  className="flex items-center justify-between border p-3 rounded-lg"
+                >
+                  <div className="text-left">
+                    <p className="font-semibold">{doc.clientName}</p>
+                    <p className="text-sm text-gray-500">
+                      {doc.caseTitle} • {doc.documentType}
+                    </p>
+                  </div>
+
+                  <a
+                    href={`${import.meta.env.VITE_API_URL}/${doc.fileUrl}`}
+                    target="_blank"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
+                  >
+                    View
+                  </a>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ========================================================== */}
     </>
   );
 };

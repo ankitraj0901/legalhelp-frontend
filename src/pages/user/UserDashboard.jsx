@@ -33,7 +33,23 @@ const UserDashboard = () => {
 
   const [assignments, setAssignments] = useState([]);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
-  
+
+  const [docRequests, setDocRequests] = useState([]);
+  // const [uploadFile, setUploadFile] = useState(null);
+  // 🔹 CHANGE #0: replaced single uploadFile with map-based state
+  const [uploadFiles, setUploadFiles] = useState({});
+
+  /*Requesting Documents backend api*/
+  useEffect(() => {
+    fetchDocumentRequests();
+  }, []);
+
+  const fetchDocumentRequests = async () => {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/documents/requests/user/${userId}`,
+    );
+    setDocRequests(res.data);
+  };
 
   const [formData, setFormData] = useState({
     title: "",
@@ -58,7 +74,7 @@ const UserDashboard = () => {
     const res = await axios.get(
       `${
         import.meta.env.VITE_API_URL
-      }/assignments/assigned-professional/${userId}`
+      }/assignments/assigned-professional/${userId}`,
     );
     setAssignments(res.data);
     console.log(res.data);
@@ -74,7 +90,7 @@ const UserDashboard = () => {
         `${import.meta.env.VITE_API_URL}/assignments/submit-details/${
           selectedAssignment.assignmentId
         }`,
-        formData
+        formData,
       );
       //console.log(response);
       await fetchAssignments();
@@ -147,7 +163,7 @@ const UserDashboard = () => {
             onClick={() => {
               window.open(
                 "https://www.incometax.gov.in/iec/foportal/",
-                "_blank"
+                "_blank",
               );
             }}
           >
@@ -197,7 +213,7 @@ const UserDashboard = () => {
                   <p>{step}</p>
                   {index < 2 && <div className="line"></div>}
                 </div>
-              )
+              ),
             )}
           </div>
         </section>
@@ -250,7 +266,7 @@ const UserDashboard = () => {
                           assignment.assignmentId
                         }&id=${assignment.clientId}&role=${
                           assignment.role
-                        }&name=${encodeURIComponent(assignment.name)}`
+                        }&name=${encodeURIComponent(assignment.name)}`,
                       );
                     }}
                   >
@@ -372,45 +388,99 @@ const UserDashboard = () => {
         </section>
 
         {/* === Document Upload Section === */}
-        <div className="document-upload">
-          <h2>Upload Documents</h2>
-          <form className="upload-form" onSubmit={handleUpload}>
+        {docRequests.map((req) => (
+          <div
+            key={req.id} //  FIX
+            className="flex items-center justify-between bg-white p-3 rounded-lg border mb-2"
+          >
+            <div>
+              <p className="font-semibold">
+                {req.documentType.replace("_", " ")}
+              </p>
+              <small className="text-gray-500">
+                Requested by {req.professionalName}
+              </small>
+            </div>
+
             <input
               type="file"
-              multiple
-              onChange={(e) => setFiles(e.target.files)}
-              className="file-input"
+              onChange={(e) =>
+                setUploadFiles((prev) => ({
+                  ...prev,
+                  [req.id]: e.target.files[0], //
+                }))
+              }
             />
-            <button type="submit" className="upload-btn">
+
+            <button
+              onClick={async () => {
+                const file = uploadFiles[req.id]; // 
+
+                if (!file) {
+                  alert("Please select a file first");
+                  return;
+                }
+
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("requestId", req.id);
+
+                await axios.post(
+                  `${import.meta.env.VITE_API_URL}/documents/upload`,
+                  formData,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                  },
+                );
+
+                alert("Document uploaded");
+                fetchDocumentRequests();
+              }}
+              className="upload-btn"
+            >
               Upload
             </button>
-          </form>
-
-          <div className="uploaded-files">
-            {/* <h3>Uploaded Files</h3> */}
-            <ul>
-              {user.recentDocs.map((file, index) => (
-                <li key={index}>{file}</li>
-              ))}
-            </ul>
           </div>
-        </div>
+        ))}
 
         {/* G. Recent Documents */}
-        <section className="recent-docs">
-          <h2>Recent Documents</h2>
-          <ul>
-            {user.recentDocs.map((doc, i) => (
-              <li key={i}>
-                <span>{doc}</span>
-                <button className="view-btn">View</button>
-              </li>
-            ))}
-          </ul>
-        </section>
+
+        {/* <section className="recent-docs">
+          <h2>Client Documents</h2>
+
+          {documents.length === 0 ? (
+            <p className="text-gray-500">No documents uploaded yet</p>
+          ) : (
+            <ul>
+              {documents.map((doc) => (
+                <li
+                  key={doc.id}
+                  className="flex justify-between items-center border-b py-2"
+                >
+                  <span>{doc.documentType.replace("_", " ")}</span>
+
+                  {doc.status === "UPLOADED" ? (
+                    <a
+                      href={`${import.meta.env.VITE_API_URL}/documents/download/${doc.id}`}
+                      target="_blank"
+                      className="view-btn"
+                    >
+                      Download
+                    </a>
+                  ) : (
+                    <span className="text-gray-400 text-sm">Pending</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section> */}
       </div>
     </>
   );
 };
 
 export default UserDashboard;
+
