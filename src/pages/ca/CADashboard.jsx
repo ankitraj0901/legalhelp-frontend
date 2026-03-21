@@ -90,9 +90,14 @@ const CADashboard = () => {
     }
   };
 
-  const askPayment = (assignmentId) => {
-    navigate(`/dashboard/lawyer/payment/${assignmentId}`);
-  };
+  const askPayment = (assignment) => {
+  setPaymentRequest({
+    assignmentId: assignment.assignmentId,
+    clientId: assignment.clientId,
+    amount: "",
+    message: ""
+  });
+};
 
   const cases = assignments.filter((a) => a.title);
 
@@ -118,6 +123,15 @@ const CADashboard = () => {
       toast.error("Failed to load documents");
     }
   };
+
+
+  /*==========================Payment services==================*/ 
+  const [paymentRequest, setPaymentRequest] = useState({
+    assignmentId: null,
+    clientId: null,
+    amount: "",
+    message: ""
+  });
 
   /* ---------------- UI ---------------- */
 
@@ -295,6 +309,84 @@ const CADashboard = () => {
             </div>
           </div>
         )}
+        {paymentRequest.assignmentId && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+
+    <div className="bg-white p-6 rounded-xl w-[380px] shadow-xl">
+
+      <h3 className="text-lg font-semibold mb-4">
+        Request Payment
+      </h3>
+
+      <input
+        type="number"
+        placeholder="Amount"
+        className="w-full border p-2 rounded-lg mb-4"
+        value={paymentRequest.amount}
+        onChange={(e) =>
+          setPaymentRequest({
+            ...paymentRequest,
+            amount: e.target.value
+          })
+        }
+      />
+
+      <textarea
+        placeholder="Message"
+        className="w-full border p-2 rounded-lg mb-4"
+        value={paymentRequest.message}
+        onChange={(e) =>
+          setPaymentRequest({
+            ...paymentRequest,
+            message: e.target.value
+          })
+        }
+      />
+
+      <div className="flex justify-end gap-3">
+
+        <button
+          onClick={() => setPaymentRequest({ assignmentId: null })}
+          className="px-4 py-2 bg-gray-300 rounded-lg"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={async () => {
+            try {
+
+              await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/payments/request`,
+                {
+                  assignmentId: paymentRequest.assignmentId,
+                  clientId: paymentRequest.clientId,
+                  professionalId: professionalId,
+                  amount: paymentRequest.amount,
+                  message: paymentRequest.message
+                }
+              );
+
+              toast.success("Payment request sent");
+
+              setPaymentRequest({ assignmentId: null });
+
+            } catch (err) {
+
+              toast.error("Failed to request payment");
+
+            }
+          }}
+          className="px-4 py-2 bg-purple-600 text-white rounded-lg"
+        >
+          Request Payment
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+)}
 
         {/* My Cases */}
         <section className="bg-white rounded-xl shadow-lg p-6 mt-10">
@@ -350,7 +442,7 @@ const CADashboard = () => {
 
                     <td className="p-3 text-center">
                       <button
-                        onClick={() => askPayment(c.assignmentId)}
+                        onClick={() => askPayment(c)}
                         className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-1 rounded-md"
                       >
                         Ask Payment

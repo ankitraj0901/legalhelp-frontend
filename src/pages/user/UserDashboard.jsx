@@ -6,6 +6,7 @@ import ChatPage from "../chat/chat";
 import "./UserDashboard.css";
 import axios from "axios";
 
+
 const UserDashboard = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
@@ -113,6 +114,82 @@ const UserDashboard = () => {
     alert("Files uploaded successfully!");
   };
 
+
+  /*Payment implementation*/ 
+  const [payments, setPayments] = useState([]);
+
+  //fetching payments requests for the user 
+  useEffect(() => {
+    fetchPayments();
+  }, []);
+
+
+  const fetchPayments = async () => {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/payments/client/${userId}`,
+      {
+        headers:{
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+    setPayments(res.data);
+  } catch (err) {
+    console.error("Error fetching payments", err);
+  }
+};
+
+
+const handlePayment = async (paymentId) => {
+  try {
+
+    const order = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/payments/create-order/${paymentId}`
+    );
+
+    const { orderId, amount } = order.data;
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY,
+      amount: amount * 100,
+      currency: "INR",
+      name: "LegalHelp",
+      description: "Case Payment",
+      order_id: orderId,
+
+      handler: async function (response) {
+
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/payments/verify`,
+          {
+            orderId: response.razorpay_order_id,
+            paymentId: response.razorpay_payment_id,
+            signature: response.razorpay_signature
+          }
+        );
+
+        alert("Payment Successful");
+
+        fetchPayments();
+      },
+
+      theme: {
+        color: "#6d28d9"
+      }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+
+  } catch (err) {
+    console.error("Payment error", err);
+  }
+};
+
+
+
+//Redirecting user to respective dashboard based on the role stored in local storage 
   useEffect(() => {
     const role = localStorage.getItem("role");
 
@@ -386,6 +463,95 @@ const UserDashboard = () => {
             </div>
           </div>
         </section>
+        {/* <section className="recent-docs">
+  <h2>Payment Requests</h2>
+
+  {payments.length === 0 ? (
+    <p className="text-gray-500">No payment requests</p>
+  ) : (
+    <table className="w-full border mt-3">
+      <thead>
+        <tr className="bg-gray-100">
+          <th className="p-2">Assignment</th>
+          <th className="p-2">Amount</th>
+          <th className="p-2">Status</th>
+          <th className="p-2">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {payments.map((p) => (
+          <tr key={p.id} className="border-t text-center">
+
+            <td className="p-2">{p.assignmentTitle}</td>
+
+            <td className="p-2">₹{p.amount}</td>
+
+            <td className="p-2">
+              {p.status === "PAID" ? (
+                <span className="text-green-600 font-semibold">
+                  Paid
+                </span>
+              ) : (
+                <span className="text-orange-500">
+                  Requested
+                </span>
+              )}
+            </td>
+
+            <td className="p-2">
+              {p.status === "REQUESTED" ? (
+                <button
+                  onClick={() => handlePayment(p.id)}
+                  className="px-3 py-1 bg-purple-600 text-white rounded"
+                >
+                  Pay Now
+                </button>
+              ) : (
+                "✓"
+              )}
+            </td>
+
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</section> */}
+
+        <section className="recent-docs">
+  <h2>Payment Requests</h2>
+
+  {payments.length === 0 ? (
+    <p>No payment requests</p>
+  ) : (
+    payments.map((p) => (
+
+      <div key={p.id} className="flex justify-between border p-3 rounded-lg mb-2">
+
+        <div>
+          <p className="font-semibold">
+            Amount: ₹{p.amount}
+          </p>
+
+          <small>
+            Requested by Professional
+          </small>
+        </div>
+
+        {p.status === "REQUESTED" && (
+          <button
+            onClick={() => handlePayment(p.id)}
+            className="bg-purple-600 text-white px-4 py-1 rounded"
+          >
+            Pay Now
+          </button>
+        )}
+
+      </div>
+    ))
+  )}
+</section>
 
         {/* === Document Upload Section === */}
         {docRequests.map((req) => (
